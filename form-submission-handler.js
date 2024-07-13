@@ -59,10 +59,10 @@
       if (formData.honeypot) {
           return false;
       }
-
+var str =!data.fempCode || !data.fempName || !data.fsiteID || !data.fworkOrderNo || !data.fdatetime || !data.fsrtLatitude || !data.fsrtLongitude;
       // Check if any required input fields are empty
       if (!data.fempCode || !data.fempName || !data.fsiteID || !data.fworkOrderNo || !data.fdatetime || !data.fsrtLatitude || !data.fsrtLongitude) {
-          alert("Please scan all necessary QR codes before submitting.");
+          alert("Please scan all necessary QR codes before submitting." + str);
           return false;
       }
 
