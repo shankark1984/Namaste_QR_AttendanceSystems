@@ -1,4 +1,4 @@
-var empID = null;
+var empCode = null;
 
 
 
@@ -25,7 +25,7 @@ domReady(function () {
 
 		if (splits[0] === "Site") {
 			console.log(mystring);
-			if (empID == null) {
+			if (empCode == null) {
 				alert("First scan employee card");
 				return;
 			}
@@ -37,10 +37,10 @@ domReady(function () {
 		}
 		if (splits[0] === "Emp") {
 
-						document.getElementById("empID").value = splits[1];
+						document.getElementById("empCode").value = splits[1];
 						document.getElementById("empName").value = splits[2];
 
-						empID = splits[1];
+						empCode = splits[1];
 
 						// Get current date and time
 						let currentDateTime = new Date();
