@@ -26,6 +26,12 @@ domReady(function () {
             }
             document.getElementById("siteID").value = splits[1];
             document.getElementById("workOrderNo").value = splits[2];
+			document.getElementById("siteLatitude").value = splits[3];
+            document.getElementById("siteLongitude").value = splits[4];
+
+            document.getElementById("siteLatitude").textContent = splits[3];
+            document.getElementById("siteLongitude").textContent = splits[4];
+            getLocation(); // Fetch location when QR code is successfully scanned
         }
 
         if (splits[0] === "Emp") {
@@ -46,7 +52,6 @@ domReady(function () {
             let minutes = String(currentDateTime.getMinutes()).padStart(2, '0');
             let formattedDateTime = `${day}-${month}-${year} ${hours}:${minutes}`;
 
-            getLocation(); // Fetch location when QR code is successfully scanned
             document.getElementById("datetime").value = formattedDateTime;
         }
     }
@@ -70,8 +75,54 @@ function getLocation() {
 
 // Function to show current position
 function showPosition(position) {
+    // Validate if location is within 100 meters range
+    if (!isValidLocation(position.coords.latitude, position.coords.longitude)) {
+        alert("Your current location is not within the allowed range.");
+        return;
+    }
+
     document.getElementById("srtLatitude").value = position.coords.latitude;
     document.getElementById("srtLongitude").value = position.coords.longitude;
+}
+
+// Function to check if location is within the allowed range (100 meters)
+function isValidLocation(latitude, longitude) {
+    // Example: Assuming a fixed center location
+    var centerLatitude = parseFloat(document.getElementById("siteLatitude").textContent); // Get site latitude from text content
+    var centerLongitude = parseFloat(document.getElementById("siteLongitude").textContent); // Get site longitude from text content
+    // var currentLatutude=parseFloat(document.getElementById("srtLatitude").textContent);
+	// var currentLongitude=parseFloat(document.getElementById("srtLongitude").textContent);
+	var maxDistance = 0.001; // Maximum distance in degrees (approx. 100 meters)
+console.log(centerLatitude +","+ centerLongitude +","+ latitude  +","+ longitude );
+    // Calculate distance using Haversine formula or any suitable method
+    var distance = calculateDistance(latitude, longitude, centerLatitude, centerLongitude);
+
+    // Check if distance is within the allowed range
+    if (distance <= maxDistance) {
+		console.log(distance+","+maxDistance)
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Function to calculate distance between two points using Haversine formula (or any suitable method)
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the Earth in km
+    var dLat = toRadians(lat2 - lat1);
+    var dLon = toRadians(lon2 - lon1);
+    var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+}
+
+// Function to convert degrees to radians
+function toRadians(degrees) {
+    return degrees * (Math.PI / 180);
 }
 
 // Function to handle geolocation errors

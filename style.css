@@ -76,9 +76,6 @@ video {
 	border: 2px solid #23b023;
 	
 }
-table, th, td {
-	border:1px solid black;
-  }
    input, label{
 	display: none;
    }
