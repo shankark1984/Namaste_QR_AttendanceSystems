@@ -62,7 +62,7 @@
 
       // Check if any required input fields are empty
       if (!data.empCode || !data.empName || !data.siteID || !data.workOrderNo || !data.datetime || !data.srtLatitude || !data.srtLongitude) {
-          alert("Please scan all necessary QR codes before submitting." + str);
+          alert("Please scan all necessary QR codes before submitting.");
           return false;
       }
 
