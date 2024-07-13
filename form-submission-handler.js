@@ -11,10 +11,10 @@
           }
           return true;
       }).map(function(k) {
-          if(elements[k].name !== undefined) {
+          if (elements[k].name !== undefined) {
               return elements[k].name;
           // special case for Edge's html collection
-          }else if(elements[k].length > 0){
+          } else if (elements[k].length > 0) {
               return elements[k].item(0).name;
           }
       }).filter(function(item, pos, self) {
@@ -22,7 +22,7 @@
       });
 
       var formData = {};
-      fields.forEach(function(name){
+      fields.forEach(function(name) {
           var element = elements[name];
 
           // singular form elements just have one value
@@ -46,7 +46,7 @@
       formData.formGoogleSheetName = form.dataset.sheet || "Attendance"; // default sheet name
       formData.formGoogleSendEmail = form.dataset.email || ""; // no email by default
 
-      return {data: formData, honeypot: honeypot};
+      return { data: formData, honeypot: honeypot };
   }
 
   function handleFormSubmit(event) {  // handles form submit without any jquery
@@ -60,15 +60,20 @@
           return false;
       }
 
+      // Check if any required input fields are empty
+      if (!data.fempCode || !data.fempName || !data.fsiteID || !data.fworkOrderNo || !data.fdatetime || !data.fsrtLatitude || !data.fsrtLongitude) {
+          alert("Please scan all necessary QR codes before submitting.");
+          return false;
+      }
+
       disableAllButtons(form);
-      
+
       // Alert before submitting the form
-      alert("Your Attendance submitted!");
+      alert("Your attendance has been submitted!");
 
       var url = form.action;
       var xhr = new XMLHttpRequest();
       xhr.open('POST', url);
-      // xhr.withCredentials = true;
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       xhr.onreadystatechange = function() {
           if (xhr.readyState === 4 && xhr.status === 200) {
