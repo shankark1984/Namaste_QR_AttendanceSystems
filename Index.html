@@ -10,63 +10,65 @@
 
 <body>
     <div class="container">
-        
+
         <div class="section">
             <img class="logo" src="img/Logo.png" alt="Namaste" width="50%">
             <!-- Display empCode above camera view -->
             <div id="empCodeDisplay" class="emp-code-display"></div>
             <div id="my-qr-reader"></div>
             <div class="container"></div>
-        
-        <form class="gform pure-form pure-form-stacked" method="POST" data-email="example@email.net"
-            action="https://script.google.com/macros/s/AKfycbzgNwtyqMz7iXF2TmMt4JdaKRmQ16WdLNWTqNQMWR34T6PVAoy4_0_QPBMltkV976FjqQ/exec">
-            <div>
-                <div>
-                    <label for="empCode">Emp Code</label>
-                    <input type="text" id="empCode" name="empCode" placeholder="Emp Code">
-                </div>
-                <div>
-                    <label for="empName">Emp Name</label>
-                    <input type="text" id="empName" name="empName" placeholder="Emp Name">
-                </div>
 
+            <form class="gform pure-form pure-form-stacked" method="POST" data-email="example@email.net"
+                action="https://script.google.com/macros/s/AKfycbzgNwtyqMz7iXF2TmMt4JdaKRmQ16WdLNWTqNQMWR34T6PVAoy4_0_QPBMltkV976FjqQ/exec">
                 <div>
-                    <label for="siteID">Site ID</label>
-                    <input type="text" id="siteID" name="siteID" placeholder="Site ID">
+                    <div>
+                        <label for="empCode">Emp Code</label>
+                        <input type="text" id="empCode" name="empCode" placeholder="Emp Code">
+                    </div>
+                    <div>
+                        <label for="empName">Emp Name</label>
+                        <input type="text" id="empName" name="empName" placeholder="Emp Name">
+                    </div>
+
+                    <div>
+                        <label for="siteID">Site ID</label>
+                        <input type="text" id="siteID" name="siteID" placeholder="Site ID">
+                    </div>
+                    <div>
+                        <label for="workOrderNo">Work Order No</label>
+                        <input type="text" id="workOrderNo" name="workOrderNo" placeholder="Work Order No">
+                    </div>
+                    <div>
+                        <label for="datetime">Date & Time</label>
+                        <input type="text" id="datetime" name="datetime" placeholder="Date & Time">
+                    </div>
+                    <div>
+                        <label for="currentLatitude">Latitude</label>
+                        <input type="text" id="currentLatitude" name="currentLatitude" placeholder="Current Latitude">
+                    </div>
+                    <div>
+                        <label for="currentLongitude">Longitude</label>
+                        <input type="text" id="currentLongitude" name="currentLongitude"
+                            placeholder="Current Longitude">
+                    </div>
+                    <div>
+                        <label for="siteLatitude">Longitude</label>
+                        <input type="text" id="siteLatitude" name="siteLatitude" placeholder="Site Latitude">
+                    </div>
+                    <div>
+                        <label for="siteLongitude">Longitude</label>
+                        <input type="text" id="siteLongitude" name="siteLongitude" placeholder="Site Longitude">
+                    </div>
                 </div>
-                <div>
-                    <label for="workOrderNo">Work Order No</label>
-                    <input type="text" id="workOrderNo" name="workOrderNo" placeholder="Work Order No">
-                </div>
-                <div>
-                    <label for="datetime">Date & Time</label>
-                    <input type="text" id="datetime" name="datetime" placeholder="Date & Time">
-                </div>
-                <div>
-                    <label for="currentLatitude">Latitude</label>
-                    <input type="text" id="currentLatitude" name="currentLatitude" placeholder="Current Latitude">
-                </div>
-                <div>
-                    <label for="currentLongitude">Longitude</label>
-                    <input type="text" id="currentLongitude" name="currentLongitude" placeholder="Current Longitude">
-                </div>
-                <div>
-                    <label for="siteLatitude">Longitude</label>
-                    <input type="text" id="siteLatitude" name="siteLatitude" placeholder="Site Latitude">
-                </div>
-                <div>
-                    <label for="siteLongitude">Longitude</label>
-                    <input type="text" id="siteLongitude" name="siteLongitude" placeholder="Site Longitude">
-                </div>
-            </div>
-            <button type="submit" class="btn btn-light text-primary w-100 py-3">Time Log</button>
-        </form>
-        <span class="text-white"><i></i>AllEdge Soft & Logic (OPC) Pvt. Ltd., All right reserved.</span>
-    </div>
+                <button type="submit" class="btn btn-light text-primary w-100 py-3">Time Log</button>
+            </form>
+            <span class="text-white"><i></i>AllEdge Soft & Logic (OPC) Pvt. Ltd., All right reserved.</span>
         </div>
-        
+    </div>
+
     <script src="qrcode.js"></script>
     <script src="script.js"></script>
     <script data-cfasync="false" src="form-submission-handler.js"></script>
 </body>
+
 </html>
