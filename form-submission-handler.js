@@ -61,7 +61,7 @@
       }
 
       // Check if any required input fields are empty
-      if (!data.empCode || !data.empName || !data.siteID || !data.workOrderNo || !data.datetime || !data.srtLatitude || !data.srtLongitude) {
+      if (!data.empCode || !data.empName || !data.siteID || !data.workOrderNo || !data.datetime || !data.currentLatitude || !data.currentLongitude) {
           alert("Please scan all necessary QR codes before submitting.");
           return false;
       }

@@ -27,7 +27,7 @@ domReady(function () {
             document.getElementById("siteID").value = splits[1];
             document.getElementById("workOrderNo").value = splits[2];
 			document.getElementById("siteLatitude").value = splits[3];
-            document.getElementById("siteLongitude").value = splits[4];
+            document.getElementById("siteLongitude").value = splits[4]
 
             document.getElementById("siteLatitude").textContent = splits[3];
             document.getElementById("siteLongitude").textContent = splits[4];
@@ -81,32 +81,35 @@ function showPosition(position) {
         return;
     }
 
-    document.getElementById("srtLatitude").value = position.coords.latitude;
-    document.getElementById("srtLongitude").value = position.coords.longitude;
+    document.getElementById("currentLatitude").value = position.coords.latitude;
+    document.getElementById("currentLongitude").value = position.coords.longitude;
 }
 
 // Function to check if location is within the allowed range (100 meters)
 function isValidLocation(latitude, longitude) {
-    // Example: Assuming a fixed center location
-    var centerLatitude = parseFloat(document.getElementById("siteLatitude").textContent); // Get site latitude from text content
-    var centerLongitude = parseFloat(document.getElementById("siteLongitude").textContent); // Get site longitude from text content
-    // var currentLatutude=parseFloat(document.getElementById("srtLatitude").textContent);
-	// var currentLongitude=parseFloat(document.getElementById("srtLongitude").textContent);
-	var maxDistance = 0.001; // Maximum distance in degrees (approx. 100 meters)
-console.log(centerLatitude +","+ centerLongitude +","+ latitude  +","+ longitude );
-    // Calculate distance using Haversine formula or any suitable method
+    var centerLatitude = parseFloat(document.getElementById("siteLatitude").textContent);
+    var centerLongitude = parseFloat(document.getElementById("siteLongitude").textContent);
+    var maxDistance = 0.1; // Approximately 100 meters in degrees
+
+    // Calculate distance using Haversine formula
     var distance = calculateDistance(latitude, longitude, centerLatitude, centerLongitude);
+
+    // Debugging output
+    console.log("Center:", centerLatitude, centerLongitude);
+    console.log("Current:", latitude, longitude);
+    console.log("Distance:", distance);
 
     // Check if distance is within the allowed range
     if (distance <= maxDistance) {
-		console.log(distance+","+maxDistance)
+        console.log("Within range");
         return true;
     } else {
+        console.log("Not within range");
         return false;
     }
 }
 
-// Function to calculate distance between two points using Haversine formula (or any suitable method)
+// Function to calculate distance between two points using Haversine formula
 function calculateDistance(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the Earth in km
     var dLat = toRadians(lat2 - lat1);
