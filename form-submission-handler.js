@@ -63,7 +63,7 @@
       disableAllButtons(form);
       
       // Alert before submitting the form
-      alert("Form data is being submitted!");
+      alert("Your Attendance submitted!");
 
       var url = form.action;
       var xhr = new XMLHttpRequest();
