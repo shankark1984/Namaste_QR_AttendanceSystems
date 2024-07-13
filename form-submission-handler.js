@@ -86,6 +86,9 @@
               if (thankYouMessage) {
                   thankYouMessage.style.display = "block";
               }
+              enableAllButtons(form); // Enable buttons after successful submission
+          } else if (xhr.readyState === 4) {
+              enableAllButtons(form); // Enable buttons if there's an error
           }
       };
 
@@ -109,11 +112,13 @@
       var buttons = form.querySelectorAll("button");
       for (var i = 0; i < buttons.length; i++) {
           buttons[i].disabled = true;
-          setTimeout(function() {
-              for (var i = 0; i < buttons.length; i++) {
-                  buttons[i].disabled = false;
-              }
-          }, 5000); // 5000 milliseconds = 5 seconds
+      }
+  }
+
+  function enableAllButtons(form) {
+      var buttons = form.querySelectorAll("button");
+      for (var i = 0; i < buttons.length; i++) {
+          buttons[i].disabled = false;
       }
   }
 })();
