@@ -55,7 +55,7 @@ domReady(function () {
 						getLocation(); // Call getLocation function when QR code is successfully scanned
 						document.getElementById("datetime").value = formattedDateTime;
 
-						alert("Your QR is: " + decodeText + "\nScanned at: " + formattedDateTime);
+						//alert("Your QR is: " + decodeText + "\nScanned at: " + formattedDateTime);
 		}
 	}
 
