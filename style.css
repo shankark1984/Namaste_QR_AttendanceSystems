@@ -7,7 +7,7 @@ body {
 	height: 100vh;
 	box-sizing: border-box;
 	text-align: center;
-	background: rgb(128 0 0 / 66%);
+	background: rgba(74, 99, 19, 0.66);
 }
 .container {
 	width: 100%;
@@ -20,7 +20,7 @@ body {
 }
 
 .section {
-	background-color: #ffffff;
+	background-color: #9a7575;
 	padding: 50px 30px;
 	border: 1.5px solid #b2b2b2;
 	border-radius: 0.25em;
@@ -62,7 +62,8 @@ button:hover {
 
 #html5-qrcode-anchor-scan-type-change {
 	text-decoration: none !important;
-	color: #1d9bf0;
+	color: #0010bc;
+	font-weight: bold;
 }
 
 video {
