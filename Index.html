@@ -12,15 +12,18 @@
     <div class="container">
         <img class="logo" src="img/Logo.png" alt="Namaste" width="50%">
         <div class="section">
+            <!-- Display empCode above camera view -->
+            <div id="empCodeDisplay" class="emp-code-display"></div>
             <div id="my-qr-reader"></div>
         </div>
+        
         <div class="container"></div>
-
+        
         <form class="gform pure-form pure-form-stacked" method="POST" data-email="example@email.net"
             action="https://script.google.com/macros/s/AKfycbzgNwtyqMz7iXF2TmMt4JdaKRmQ16WdLNWTqNQMWR34T6PVAoy4_0_QPBMltkV976FjqQ/exec">
             <div>
                 <div>
-                    <label for="empID">Emp Code</label>
+                    <label for="empCode">Emp Code</label>
                     <input type="text" id="empCode" name="empCode" placeholder="Emp Code">
                 </div>
                 <div>
@@ -45,7 +48,7 @@
                     <input type="text" id="srtLatitude" name="srtLatitude" placeholder="Latitude">
                 </div>
                 <div>
-                    <label for="srtLongitude">ELongitude</label>
+                    <label for="srtLongitude">Longitude</label>
                     <input type="text" id="srtLongitude" name="srtLongitude" placeholder="Longitude">
                 </div>
             </div>
