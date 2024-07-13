@@ -31,6 +31,7 @@ domReady(function () {
 			}
 			document.getElementById("siteID").textContent = splits[1];
 			document.getElementById("workOrderNo").textContent = splits[2];
+			alert("Your QR is: " + decodeText + "\nScanned at: " + formattedDateTime);
 
 			// Load data into Google Sheets 
 
