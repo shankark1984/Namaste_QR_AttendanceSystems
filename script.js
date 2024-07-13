@@ -39,6 +39,8 @@ domReady(function () {
 
 						document.getElementById("empIDVal").textContent = splits[1];
 						document.getElementById("empNameVal").textContent = splits[2];
+						document.getElementById("fempCode").value = splits[1];
+						document.getElementById("fempName").value = splits[2];
 						empIDVal = splits[1];
 
 						// Get current date and time
