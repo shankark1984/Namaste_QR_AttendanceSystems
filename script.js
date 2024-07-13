@@ -1,4 +1,4 @@
-var empID = null;
+var empIDVal = null;
 
 
 
@@ -25,21 +25,21 @@ domReady(function () {
 
 		if (splits[0] === "Site") {
 			console.log(mystring);
-			if (empID == null) {
+			if (empIDVal == null) {
 				alert("First scan employee card");
 				return;
 			}
-			document.getElementById("siteID").textContent = splits[1];
-			document.getElementById("workOrderNo").textContent = splits[2];
+			document.getElementById("siteIDVal").textContent = splits[1];
+			document.getElementById("workOrderNoVal").textContent = splits[2];
 
 			// Load data into Google Sheets 
 
 		}
 		if (splits[0] === "Emp") {
 
-						document.getElementById("empID").textContent = splits[1];
-						document.getElementById("empName").textContent = splits[2];
-						empID = splits[1];
+						document.getElementById("empIDVal").textContent = splits[1];
+						document.getElementById("empNameVal").textContent = splits[2];
+						empIDVal = splits[1];
 
 						// Get current date and time
 						let currentDateTime = new Date();
@@ -51,7 +51,7 @@ domReady(function () {
 						let formattedDateTime = `${day}-${month}-${year} ${hours}:${minutes}`;
 
 						getLocation(); // Call getLocation function when QR code is successfully scanned
-						document.getElementById("datetime").textContent = formattedDateTime;
+						document.getElementById("datetimeVal").textContent = formattedDateTime;
 
 						//alert("Your QR is: " + decodeText + "\nScanned at: " + formattedDateTime);
 		}
@@ -73,8 +73,8 @@ function getLocation() {
 }
 
 function showPosition(position) {
-	document.getElementById("srtLatitude").textContent = position.coords.latitude;
-	document.getElementById("srtLongitude").textContent = position.coords.longitude;
+	document.getElementById("srtLatitudeVal").textContent = position.coords.latitude;
+	document.getElementById("srtLongitudeVal").textContent = position.coords.longitude;
 }
 
 
