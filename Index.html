@@ -8,7 +8,7 @@
     <title>Namaste</title>
 </head>
 
-<body>
+<body onload="currentLocation()">
     <div class="container">
 
         <div class="section">
@@ -62,8 +62,8 @@
                 <button type="submit" class="btn btn-light text-primary w-100 py-3">Time Log</button>
             </form>
             <span class="text-white"><i></i>AllEdge Soft & Logic (OPC) Pvt. Ltd., All right reserved.</span>
-            <span id="currentLatLon"></span>
-            <p id="currentLatLon"></p>
+        
+            <p id="demo"></p>
 
         </div>
     </div>
@@ -71,6 +71,23 @@
     <script src="qrcode.js"></script>
     <script src="script.js"></script>
     <script data-cfasync="false" src="form-submission-handler.js"></script>
+
+    <script>
+        const y = document.getElementById("demo");
+        
+        function currentLocation() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showCurrentPosition);
+          } else { 
+            y.innerHTML = "Geolocation is not supported by this browser.";
+          }
+        }
+        
+        function showCurrentPosition(position) {
+          x.innerHTML = "Latitude: " + position.coords.latitude + 
+          "<br>Longitude: " + position.coords.longitude;
+        }
+        </script>
 </body>
 
 </html>
