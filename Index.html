@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Namaste</title>
+</head>
+
+<body>
+    <div class="container">
+        <img class="logo" src="img/Logo.png" alt="Vishruta Attendance Systems" width="50%">
+        <div class="section">
+            <div id="my-qr-reader"></div>
+        </div>
+        <div class="container"></div>
+
+        <form class="gform pure-form pure-form-stacked" method="POST" data-email="example@email.net"
+            action="https://script.google.com/macros/s/AKfycbybCPerFBgLY4pC31l1It8IqmT1QCshGF2gZD_xSXKBVLFv07LzfiFW2zs6ge_cFlc4IA/exec">
+            <div>
+            <div>
+                <label for="fempID">Emp Code</label>
+                <input type="text" id="fempCode" name="fempCode" placeholder="Emp Code">
+              </div>
+            <div>
+                <label for="fempName">Emp Name</label>
+                <input type="text" id="fempName" name="fempName" placeholder="Emp Name">
+            </div>
+
+            <div>
+                <label for="fsiteID">Site ID</label>
+                <input type="text" id="fsiteID" name="fsiteID" placeholder="Site ID">
+            </div>
+            <div>
+                <label for="fworkOrderNo">Work Order No</label>
+                <input type="text" id="fworkOrderNo" name="fworkOrderNo" placeholder="Work Order No">
+            </div>
+            <div>
+                <label for="fdatetime">Date & Time</label>
+                <input type="text" id="fdatetime" name="fdatetime" placeholder="Date & Time">
+            </div>
+            <div>
+                <label for="fsrtLatitude">Latitude</label>
+                <input type="text" id="fsrtLatitude" name="fsrtLatitude" placeholder="Latitude">
+            </div>
+            <div>
+                <label for="fsrtLongitude">ELongitude</label>
+                <input type="text" id="fsrtLongitude" name="fsrtLongitude" placeholder="Longitude">
+            </div>
+        </div>
+            <!-- <p id="empID" name="name"></p>
+            <p id="empName" name="name"></p>
+            <p id="siteID" name="name"></p>
+            <p id="workOrderNo" name="name"></p>
+            <p id="datetime" name="name"></p>
+            <p id="srtLatitude" name="name"></p>
+            <p id="srtLongitude" name="name"></p> -->
+            <button type="button">Time Log</button>
+        </form>
+
+
+        <table>
+            <tr>
+                <th>Emp ID</th>
+                <td id="empID"></td>
+            </tr>
+            <tr>
+                <th>Emp Name</th>
+                <td id="empName"></td>
+            </tr>
+            <tr>
+                <th>Site ID</th>
+                <td id="siteID"></td>
+            </tr>
+            <tr>
+                <th>Work Order No</th>
+                <td id="workOrderNo"></td>
+            </tr>
+            <tr>
+                <th>Date Time</th>
+                <td id="datetime"></td>
+            </tr>
+            <tr>
+                <th>Latitude</th>
+                <td id="srtLatitude"></td>
+            </tr>
+            <tr>
+                <th>Longitude</th>
+                <td id="srtLongitude"></td>
+            </tr>
+        </table>
+    </div>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="qrcode.js"></script>
+    <script src="script.js"></script>
+    <script data-cfasync="false" src="form-submission-handler.js"></script>
+</body>
+
+</html>
