@@ -87,3 +87,15 @@ video {
 	height: 300px; /* Should be removed. Only for demonstration */
   }
    
+
+  table {
+	width: 100%;
+	border-collapse: collapse;
+}
+table, th, td {
+	border: 1px solid black;
+}
+th, td {
+	padding: 8px;
+	text-align: left;
+}

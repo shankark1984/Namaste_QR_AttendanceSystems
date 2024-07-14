@@ -15,6 +15,9 @@ domReady(function () {
 
     // Function to handle QR code scan success
     function onScanSuccess(decodeText, decodeResult) {
+
+		
+
         var mystring = decodeText;
         var splits = mystring.split(",");
 
@@ -26,12 +29,12 @@ domReady(function () {
             }
             document.getElementById("siteID").value = splits[1];
             document.getElementById("workOrderNo").value = splits[2];
-            document.getElementById("siteLatitude").value = splits[3];
+			document.getElementById("siteLatitude").value = splits[3];
             document.getElementById("siteLongitude").value = splits[4];
 
             document.getElementById("siteLatitude").textContent = splits[3];
             document.getElementById("siteLongitude").textContent = splits[4];
-            getLocation(); // Fetch location when QR code is successfully scanned
+			getLocation(); // Fetch location when QR code is successfully scanned
         }
 
         if (splits[0] === "Emp") {
@@ -56,29 +59,16 @@ domReady(function () {
         }
     }
 
-    // Initialize QR code scanner with back-facing camera
-    function initializeScanner() {
-        Html5Qrcode.getCameras().then(devices => {
-            if (devices && devices.length) {
-                // Select the back-facing camera, assuming it's the last in the list
-                var backCamera = devices[devices.length - 1].id;
-                let htmlscanner = new Html5QrcodeScanner(
-                    "my-qr-reader",
-                    { fps: 10, qrbox: 250 },
-                    /* verbose= */ false
-                );
-                htmlscanner.render(onScanSuccess, undefined, backCamera);
-            }
-        }).catch(err => {
-            console.error(err);
-            alert("Error initializing the camera: " + err);
-        });
-    }
-
-    initializeScanner();
+    // Initialize QR code scanner
+    let htmlscanner = new Html5QrcodeScanner(
+        "my-qr-reader",
+        { fps: 10, qrbos: 250 }
+    );
+    htmlscanner.render(onScanSuccess);
 });
 
 // Function to get current location
+const x = document.getElementById("demo");
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -95,34 +85,39 @@ function showPosition(position) {
         return;
     }
 
-    document.getElementById("srtLatitude").value = position.coords.latitude;
-    document.getElementById("srtLongitude").value = position.coords.longitude;
+    document.getElementById("currentLatitude").value = position.coords.latitude;
+    document.getElementById("currentLongitude").value = position.coords.longitude;
 }
 
 // Function to check if location is within the allowed range (100 meters)
 function isValidLocation(latitude, longitude) {
-    // Example: Assuming a fixed center location
-    var centerLatitude = parseFloat(document.getElementById("siteLatitude").textContent); // Get site latitude from text content
-    var centerLongitude = parseFloat(document.getElementById("siteLongitude").textContent); // Get site longitude from text content
-    var maxDistance = 0.001; // Maximum distance in degrees (approx. 100 meters)
-    console.log(centerLatitude +","+ centerLongitude +","+ latitude  +","+ longitude );
-    // Calculate distance using Haversine formula or any suitable method
+    var centerLatitude = parseFloat(document.getElementById("siteLatitude").textContent);
+    var centerLongitude = parseFloat(document.getElementById("siteLongitude").textContent);
+    var maxDistance = 0.1; // Approximately 100 meters in degrees
+
+    // Calculate distance using Haversine formula
     var distance = calculateDistance(latitude, longitude, centerLatitude, centerLongitude);
+
+    // Debugging output
+    console.log("Center:", centerLatitude, centerLongitude);
+    console.log("Current:", latitude, longitude);
+    console.log("Distance:", distance);
 
     // Check if distance is within the allowed range
     if (distance <= maxDistance) {
-        console.log(distance+","+maxDistance)
+        console.log("Within range");
         return true;
     } else {
+        console.log("Not within range");
         return false;
     }
 }
 
-// Function to calculate distance between two points using Haversine formula (or any suitable method)
+// Function to calculate distance between two points using Haversine formula
 function calculateDistance(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the Earth in km
     var dLat = toRadians(lat2 - lat1);
-    var dLon = toRadians(lon1 - lon2); // Corrected formula
+    var dLon = toRadians(lon2 - lon1);
     var a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
