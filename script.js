@@ -27,6 +27,9 @@ domReady(function () {
                 alert("Please scan employee card first.");
                 return;
             }
+			getLocation(); // Fetch location when QR code is successfully scanned
+			
+			document.getElementById("siteCodeDisplay").textContent = "Site Code: " + splits[1];
             document.getElementById("siteID").value = splits[1];
             document.getElementById("workOrderNo").value = splits[2];
 			document.getElementById("siteLatitude").value = splits[3];
@@ -34,7 +37,7 @@ domReady(function () {
 
             document.getElementById("siteLatitude").textContent = splits[3];
             document.getElementById("siteLongitude").textContent = splits[4];
-			getLocation(); // Fetch location when QR code is successfully scanned
+
         }
 
         if (splits[0] === "Emp") {
@@ -44,7 +47,7 @@ domReady(function () {
             empCode = splits[1]; // Store empCode for future use
 
             // Display empCode above camera view
-            document.getElementById("empCodeDisplay").textContent = "Emp Code: " + splits[1];
+            document.getElementById("empNameDisplay").textContent = "Emp Name: " + splits[2];
 
             // Get current date and time
             let currentDateTime = new Date();
