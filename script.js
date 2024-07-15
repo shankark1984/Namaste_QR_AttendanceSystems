@@ -53,7 +53,7 @@ domReady(function () {
 
 			empCode = splits[1]; // Store empCode for future use
 
-			fetchDataFromGoogleSheet(empCode);
+			
 			// Display empCode above camera view
 			document.getElementById("empNameDisplay").textContent = "Emp Name: " + splits[2];
 
