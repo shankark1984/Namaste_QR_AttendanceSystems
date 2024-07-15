@@ -1,8 +1,11 @@
+
+
 var empCode = null;
 var notRange = null;
 
 const MAX_DISTANCE_KM = 0.1; // Approximately 100 meters
 const SCAN_DELAY = 1000;
+
 
 // Utility function to format date and time
 function formatDateTime(date) {
@@ -50,6 +53,7 @@ domReady(function () {
 
 			empCode = splits[1]; // Store empCode for future use
 
+			fetchDataFromGoogleSheet(empCode);
 			// Display empCode above camera view
 			document.getElementById("empNameDisplay").textContent = "Emp Name: " + splits[2];
 

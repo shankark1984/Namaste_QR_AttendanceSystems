@@ -1,0 +1,31 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Data from Google Sheets</title>
+</head>
+<body>
+    <script type="module">
+        import { fetchDataFromGoogleSheet } from './googleSheets.js';
+
+        // Example usage
+        const empCode = 'E003'; // Replace with actual employee code
+        
+        fetchDataFromGoogleSheet(empCode)
+            .then(data => {
+                if (data) {
+                    console.log('Fetched data:', data);
+                    // Further processing or display logic here
+                } else {
+                    console.log('Employee data not found.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    </script>
+</body>
+</html>

@@ -87,8 +87,7 @@ video {
 	height: 300px; /* Should be removed. Only for demonstration */
   }
    
-
-  table {
+table {
 	width: 100%;
 	border-collapse: collapse;
 }
