@@ -18,7 +18,7 @@ const domReady = fn => {
 };
 
 // Function to handle QR code scan success
-const onScanSuccess = (decodeText, decodeResult) => {
+const onScanSuccess = async (decodeText, decodeResult) => {
     const splits = decodeText.split(",");
 
     if (splits[0] === "Site") {
@@ -39,6 +39,7 @@ const onScanSuccess = (decodeText, decodeResult) => {
         // Debugging: Log site coordinates
         console.log("Site Latitude:", splits[3]);
         console.log("Site Longitude:", splits[4]);
+
     } else if (splits[0] === "Emp") {
         document.getElementById("empCode").value = splits[1];
         document.getElementById("empName").value = splits[2];
@@ -50,6 +51,9 @@ const onScanSuccess = (decodeText, decodeResult) => {
         // Debugging: Log employee code and name
         console.log("Emp Code:", splits[1]);
         console.log("Emp Name:", splits[2]);
+
+        // Fetch and display data in table
+        await searchEmpCode(empCode);
     }
 };
 
@@ -107,7 +111,7 @@ const isValidLocation = (latitude, longitude) => {
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Radius of the Earth in km
     const dLat = toRadians(lat2 - lat1);
-    const dLon = toRadians(lon2 - lon1);
+    const dLon = toRadians(lat2 - lon1);
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
         Math.sin(dLon / 2) * Math.sin(dLon / 2);
@@ -128,3 +132,72 @@ const showError = error => {
     };
     alert(errorMessages[error.code]);
 };
+
+// Google Sheets API Fetch Function
+const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA'; // Replace with your API key
+const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E'; // Replace with your Google Sheet ID
+const RANGE = 'Attendance!A1:F'; // Adjust the range as per your sheet
+
+async function fetchData() {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+    console.log("Fetching data from URL:", url); // Debugging output
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Fetched data:", data); // Debugging output
+        return data.values;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        alert("Failed to fetch data from Google Sheets. Please check console for more details.");
+    }
+}
+
+function populateTable(data) {
+    const tableHeader = document.getElementById('table-header');
+    const tableBody = document.getElementById('table-body');
+
+    // Clear existing content
+    tableHeader.innerHTML = '';
+    tableBody.innerHTML = '';
+
+    if (data && data.length > 0) {
+        // Populate table header
+        data[0].forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+            tableHeader.appendChild(th);
+        });
+
+        // Populate table body
+        for (let i = 1; i < data.length; i++) {
+            const tr = document.createElement('tr');
+            data[i].forEach(cell => {
+                const td = document.createElement('td');
+                td.textContent = cell;
+                tr.appendChild(td);
+            });
+            tableBody.appendChild(tr);
+        }
+    } else {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = data[0].length;
+        td.textContent = 'No data available';
+        tr.appendChild(td);
+        tableBody.appendChild(tr);
+    }
+}
+
+async function searchEmpCode(empCode) {
+    const data = await fetchData();
+    if (data && data.length > 0) {
+        // Assuming empCode is in the first column
+        const filteredData = data.filter(row => row[1] === empCode);
+        // Include the header row
+        filteredData.unshift(data[0]);
+        populateTable(filteredData);
+    }
+}
