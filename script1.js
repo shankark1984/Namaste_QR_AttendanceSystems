@@ -52,8 +52,6 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         console.log("Emp Code:", splits[1]);
         console.log("Emp Name:", splits[2]);
 
-
-        document.getElementById("dataAttandence").textContent = `Current Month Attandence Details`;
         // Fetch and display data in table
         await searchEmpCode(empCode);
     }
