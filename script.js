@@ -52,7 +52,6 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         console.log("Emp Code:", splits[1]);
         console.log("Emp Name:", splits[2]);
 
-
         document.getElementById("dataAttandence").textContent = `Current Month Attandence Details`;
         // Fetch and display data in table
         await searchEmpCode(empCode);
@@ -68,7 +67,11 @@ domReady(() => {
 // Function to get current location
 const getLocation = () => {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
+        navigator.geolocation.getCurrentPosition(showPosition, showError, {
+            enableHighAccuracy: true, // Request high accuracy mode
+            timeout: 5000, // Set timeout to 5 seconds
+            maximumAge: 0 // Disable caching of location
+        });
     } else {
         alert("Geolocation is not supported by this browser.");
     }
@@ -84,7 +87,7 @@ const showPosition = position => {
     console.log("Current Position Longitude:", longitude);
 
     if (!isValidLocation(latitude, longitude)) {
-        alert("Your current location is not within the allowed range.");
+        alert("Your current location is not within the allowed range. Please enable high accuracy mode on your device.");
         return;
     }
 
@@ -113,7 +116,7 @@ const isValidLocation = (latitude, longitude) => {
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Radius of the Earth in km
     const dLat = toRadians(lat2 - lat1);
-    const dLon = toRadians(lat2 - lon1);
+    const dLon = toRadians(lon2 - lon1);
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
         Math.sin(dLon / 2) * Math.sin(dLon / 2);
@@ -194,7 +197,6 @@ function populateTable(data) {
     }
 }
 
-
 function processInOutTimes(data) {
     const dateMap = new Map();
 
@@ -236,7 +238,6 @@ function processInOutTimes(data) {
     return processedData;
 }
 
-
 async function searchEmpCode(empCode) {
     const data = await fetchData();
     if (data && data.length > 0) {
@@ -248,5 +249,3 @@ async function searchEmpCode(empCode) {
         populateTable(processedData);
     }
 }
-
-
