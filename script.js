@@ -52,6 +52,7 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         console.log("Emp Code:", splits[1]);
         console.log("Emp Name:", splits[2]);
 
+        document.getElementById("dataAttandence").textContent = `Current Month Attandence Details`;
         // Fetch and display data in table
         await searchEmpCode(empCode);
     }
@@ -165,39 +166,84 @@ function populateTable(data) {
 
     if (data && data.length > 0) {
         // Populate table header
-        data[0].forEach(header => {
+        const headers = ['Date', 'In Time', 'Out Time', 'Working Hours'];
+        headers.forEach(header => {
             const th = document.createElement('th');
             th.textContent = header;
             tableHeader.appendChild(th);
         });
 
-        // Populate table body
-        for (let i = 1; i < data.length; i++) {
+        // Populate table body with processed data
+        data.forEach(row => {
             const tr = document.createElement('tr');
-            data[i].forEach(cell => {
+            row.forEach(cell => {
                 const td = document.createElement('td');
                 td.textContent = cell;
                 tr.appendChild(td);
             });
             tableBody.appendChild(tr);
-        }
+        });
     } else {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = data[0].length;
+        td.colSpan = 4; // Only 4 columns
         td.textContent = 'No data available';
         tr.appendChild(td);
         tableBody.appendChild(tr);
     }
 }
 
+
+
+function processInOutTimes(data) {
+    const dateMap = new Map();
+
+    data.forEach(row => {
+        const [timestamp, empCode, empName, datetime, siteID, workOrderNo] = row;
+        const [date, time] = datetime.split(' ');
+
+        if (!dateMap.has(date)) {
+            dateMap.set(date, []);
+        }
+
+        dateMap.get(date).push({ time, row });
+    });
+
+    const processedData = [];
+
+    dateMap.forEach(entries => {
+        if (entries.length >= 2) {
+            // Sort by time for the given date
+            const sortedEntries = entries.sort((a, b) => new Date(`1970-01-01T${a.time}`) - new Date(`1970-01-01T${b.time}`));
+            const inTime = sortedEntries[0].time;
+            const outTime = sortedEntries[sortedEntries.length - 1].time;
+
+            const inDateTime = new Date(`1970-01-01T${inTime}`);
+            const outDateTime = new Date(`1970-01-01T${outTime}`);
+            const workingHours = ((outDateTime - inDateTime) / (1000 * 60 * 60)).toFixed(2);
+
+            const newRow = [sortedEntries[0].row[3].split(' ')[0], inTime, outTime, workingHours];
+            processedData.push(newRow);
+        } else {
+            const newRow = [entries[0].row[3].split(' ')[0], entries[0].time, '', ''];
+            processedData.push(newRow);
+        }
+    });
+
+    return processedData;
+}
+
+
 async function searchEmpCode(empCode) {
     const data = await fetchData();
     if (data && data.length > 0) {
         // Assuming empCode is in the first column
         const filteredData = data.filter(row => row[1] === empCode);
-        // Include the header row
-        filteredData.unshift(data[0]);
-        populateTable(filteredData);
+        // Include the header row (if you still need it for any purpose, otherwise skip this)
+        // filteredData.unshift(data[0]);  // Commented out because we do not need header for the table
+        const processedData = processInOutTimes(filteredData);
+        populateTable(processedData);
     }
 }
+
+
