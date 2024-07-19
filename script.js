@@ -20,7 +20,7 @@ const domReady = fn => {
 // Function to handle QR code scan success
 const onScanSuccess = async (decodeText, decodeResult) => {
     const splits = decodeText.split(",");
-
+    console.log(splits);
     if (splits[0] === "Site") {
         if (!empCode) {
             alert("Please scan employee card first.");
@@ -41,22 +41,32 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         console.log("Site Longitude:", splits[4]);
 
     } else if (splits[0] === "Emp") {
+        empCode = splits[1];
+        const empExists = await searchEmpCodeMatch(empCode);
+
+        if (!empExists) {
+            return; // Stop execution if employee doesn't exist or is deactive
+        }
+        await searchEmpCode(empCode);
+        
         document.getElementById("empCode").value = splits[1];
         document.getElementById("empName").value = splits[2];
-
-        empCode = splits[1];
-        document.getElementById("empNameDisplay").textContent = `Emp Name: ${splits[2]}`;
+        
+        const empNameDisplayElement = document.getElementById("empNameDisplay");
+        if (empNameDisplayElement) {
+            empNameDisplayElement.textContent = `Emp Name: ${splits[2]}`;
+        }
         document.getElementById("datetime").value = formatDateTime(new Date());
 
         // Debugging: Log employee code and name
         console.log("Emp Code:", splits[1]);
         console.log("Emp Name:", splits[2]);
 
-        document.getElementById("dataAttandence").textContent = `Current Month Attandence Details`;
+        document.getElementById("dataAttandence").textContent = `Current Month Attendance Details`;
         // Fetch and display data in table
-        await searchEmpCode(empCode);
+        
     }
-};
+}
 
 // Initialize QR code scanner
 domReady(() => {
@@ -142,9 +152,27 @@ const showError = error => {
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA'; // Replace with your API key
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E'; // Replace with your Google Sheet ID
 const RANGE = 'Attendance!A1:F'; // Adjust the range as per your sheet
+const empRange='EmployeeDetails!A1:C';
 
 async function fetchData() {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+    console.log("Fetching data from URL:", url); // Debugging output
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Fetched data:", data); // Debugging output
+        return data.values;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        alert("Failed to fetch data from Google Sheets. Please check console for more details.");
+    }
+}
+
+async function matchedEmpfetchData() {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${empRange}?key=${API_KEY}`;
     console.log("Fetching data from URL:", url); // Debugging output
     try {
         const response = await fetch(url);
@@ -247,5 +275,32 @@ async function searchEmpCode(empCode) {
         // filteredData.unshift(data[0]);  // Commented out because we do not need header for the table
         const processedData = processInOutTimes(filteredData);
         populateTable(processedData);
+    }
+}
+
+async function searchEmpCodeMatch(empCode) {
+    const data = await matchedEmpfetchData();
+    if (data && data.length > 0) {
+        // Assuming empCode is in the first column and status is in the third column
+        const matchData = data.filter(row => row[0] === empCode);
+        
+        if (matchData.length > 0) {
+            const status = matchData[0][2];
+            if (status === "Active") {
+                console.log('Employee A', matchData);
+                return true; // Employee exists and is active
+            } else {
+                alert("Your Employee Id is blocked, kindly contact your admin");
+                location.reload(); // Refresh the page
+                return false; // Employee exists but is deactive
+            }
+        } else {
+            alert("Employee doesn't exist, kindly contact your admin");
+            location.reload(); // Refresh the page
+            return false; // Employee doesn't exist
+        }
+    } else {
+        alert("No data available");
+        return false; // No data available
     }
 }
