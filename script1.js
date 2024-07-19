@@ -21,8 +21,6 @@ const domReady = fn => {
 const onScanSuccess = async (decodeText, decodeResult) => {
     const splits = decodeText.split(",");
     console.log(splits);
-
-
     if (splits[0] === "Site") {
         if (!empCode) {
             alert("Please scan employee card first.");
@@ -64,22 +62,11 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         console.log("Emp Code:", splits[1]);
         console.log("Emp Name:", splits[2]);
 
-        document.getElementById("datetime").value = formatDateTime(new Date());
-
-        // Set logStatus dynamically based on searchLogStatus result
-        const logStatus = await searchLogStatus(empCode);
-        console.log("logStatus:", logStatus); // Debug log
-        document.getElementById("logStatus").value = logStatus;
-        document.getElementById("logStatus1").textContent = "LOG" + logStatus;
-
-        document.getElementById("dataAttendance").textContent = `Current Month Attendance Details`;
+    
         // Fetch and display data in table
-        await searchEmpCode(empCode);
-        
         
     }
 }
-
 
 // Initialize QR code scanner
 domReady(() => {
@@ -92,7 +79,7 @@ const getLocation = () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError, {
             enableHighAccuracy: true, // Request high accuracy mode
-            timeout: 50000, // Set timeout to 5 seconds
+            timeout: 5000, // Set timeout to 5 seconds
             maximumAge: 0 // Disable caching of location
         });
     } else {
@@ -111,7 +98,6 @@ const showPosition = position => {
 
     if (!isValidLocation(latitude, longitude)) {
         alert("Your current location is not within the allowed range. Please enable high accuracy mode on your device.");
-        document.getElementById("siteCodeDisplay").style.display='none';
         return;
     }
 
@@ -165,7 +151,7 @@ const showError = error => {
 // Google Sheets API Fetch Function
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA'; // Replace with your API key
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E'; // Replace with your Google Sheet ID
-const RANGE = 'Attendance!A1:H'; // Adjust the range as per your sheet
+const RANGE = 'Attendance!A1:F'; // Adjust the range as per your sheet
 const empRange='EmployeeDetails!A1:C';
 
 async function fetchData() {
@@ -239,69 +225,46 @@ function populateTable(data) {
     }
 }
 
-
-
-
 function processInOutTimes(data) {
     const dateMap = new Map();
 
-    // Organize data by date and status
     data.forEach(row => {
-        const [timestamp, empCode, empName, datetime, siteID, workOrderNo, logStatus] = row;
+        const [timestamp, empCode, empName, datetime, siteID, workOrderNo] = row;
         const [date, time] = datetime.split(' ');
 
         if (!dateMap.has(date)) {
-            dateMap.set(date, { inTimes: [], outTimes: [] });
+            dateMap.set(date, []);
         }
 
-        if (logStatus.toUpperCase() === 'IN') {
-            dateMap.get(date).inTimes.push({ time, row });
-        } else if (logStatus.toUpperCase() === 'OUT') {
-            dateMap.get(date).outTimes.push({ time, row });
-        } else {
-            // If logStatus is empty, consider it as an additional entry without status
-            dateMap.get(date).inTimes.push({ time, row });
-        }
+        dateMap.get(date).push({ time, row });
     });
 
     const processedData = [];
 
-    // Process data for each date
-    dateMap.forEach(({ inTimes, outTimes }, date) => {
-        // Sort by time for each status
-        const sortedInTimes = inTimes.sort((a, b) => new Date(`1970-01-01T${a.time}`) - new Date(`1970-01-01T${b.time}`));
-        const sortedOutTimes = outTimes.sort((a, b) => new Date(`1970-01-01T${a.time}`) - new Date(`1970-01-01T${b.time}`));
+    dateMap.forEach(entries => {
+        if (entries.length >= 2) {
+            // Sort by time for the given date
+            const sortedEntries = entries.sort((a, b) => new Date(`1970-01-01T${a.time}`) - new Date(`1970-01-01T${b.time}`));
+            const inTime = sortedEntries[0].time;
+            const outTime = sortedEntries[sortedEntries.length - 1].time;
 
-        // Match In and Out times
-        while (sortedInTimes.length && sortedOutTimes.length) {
-            const inEntry = sortedInTimes.shift();
-            const outEntry = sortedOutTimes.shift();
-
-            // Calculate working hours
-            const inDateTime = new Date(`1970-01-01T${inEntry.time}`);
-            const outDateTime = new Date(`1970-01-01T${outEntry.time}`);
-            const diffMs = outDateTime - inDateTime;
+            const inDateTime = new Date(`1970-01-01T${inTime}`);
+            const outDateTime = new Date(`1970-01-01T${outTime}`);
+            const diffMs = outDateTime - inDateTime; // Difference in milliseconds
             const hours = Math.floor(diffMs / (1000 * 60 * 60));
             const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-            const workingHours = `${hours}:${minutes.toString().padStart(2, '0')}`;
+            const workingHours = `${hours}:${minutes.toString().padStart(2, '0')}`; // Format "Hours:Minutes"
 
-            processedData.push([date, inEntry.time, outEntry.time, workingHours]);
+            const newRow = [sortedEntries[0].row[3].split(' ')[0], inTime, outTime, workingHours];
+            processedData.push(newRow);
+        } else {
+            const newRow = [entries[0].row[3].split(' ')[0], entries[0].time, '', ''];
+            processedData.push(newRow);
         }
-
-        // Handle cases with extra inTimes or outTimes
-        sortedInTimes.forEach(inEntry => {
-            processedData.push([date, inEntry.time, '', '']);
-        });
-
-        sortedOutTimes.forEach(outEntry => {
-            processedData.push([date, '', outEntry.time, '']);
-        });
     });
 
     return processedData;
 }
-
-
 
 async function searchEmpCode(empCode) {
     const data = await fetchData();
@@ -317,58 +280,27 @@ async function searchEmpCode(empCode) {
 
 async function searchEmpCodeMatch(empCode) {
     const data = await matchedEmpfetchData();
-    const filteredData = data.filter(row => row[0] === empCode);
-
-    console.log("Filtered data for employee code match:", filteredData); // Debugging output
-
-    if (filteredData.length === 0) {
-        alert("Employee does not exist in the database. Please contact the administrator.");
-        console.log("Employee code not found in the database:", empCode); // Debugging output
-        return false; // Return false if employee code is not found
-    }
-
-    const isDeactive = filteredData[0][2] === 'Deactive';
-    if (isDeactive) {
-        alert("Employee is currently deactive. Please contact the administrator.");
-        console.log("Employee code is deactive:", empCode); // Debugging output
-        return false; // Return false if employee code is deactive
-    }
-
-    return true; // Return true if employee exists and is active
-}
-
-async function searchLogStatus(empCode) {
-    const data = await fetchData();
-
-    // Filter data for the specific employee
-    const filteredData = data
-        .filter(row => row[1] === empCode)
-        .sort((a, b) => {
-            // Combine date and time into a single Date object
-            const aDateTime = new Date(`${a[0]} ${a[3]}`);
-            const bDateTime = new Date(`${b[0]} ${b[3]}`);
-            return bDateTime - aDateTime; // Sort in descending order
-        });
-
-    console.log("Filtered data for log status:", filteredData); // Debugging output
-
-    if (filteredData.length === 0) {
-        console.log("No log data found for empCode:", empCode); // Debugging output
-        return 'IN'; // Default to 'IN' if no log data found
-    }
-
-    // Get the most recent log entry (last entry in sorted array)
-    const latestLogEntry = filteredData[filteredData.length - 1];
-    console.log("Latest log entry for empCode:", empCode, latestLogEntry); // Debugging output
-
-    // Determine the latest log status
-    const latestLogStatus = (latestLogEntry[6] || '').trim().toUpperCase();
-    console.log("Latest log status for empCode:", empCode, "is:", latestLogStatus); // Debugging output
-
-    // Toggle between 'IN' and 'OUT' based on the latest log status
-    if (latestLogStatus === 'IN') {
-        return 'OUT';
+    if (data && data.length > 0) {
+        // Assuming empCode is in the first column and status is in the third column
+        const matchData = data.filter(row => row[0] === empCode);
+        
+        if (matchData.length > 0) {
+            const status = matchData[0][2];
+            if (status === "Active") {
+                console.log('Employee A', matchData);
+                return true; // Employee exists and is active
+            } else {
+                alert("Your Employee Id is blocked, kindly contact your admin");
+                location.reload(); // Refresh the page
+                return false; // Employee exists but is deactive
+            }
+        } else {
+            alert("Employee doesn't exist, kindly contact your admin");
+            location.reload(); // Refresh the page
+            return false; // Employee doesn't exist
+        }
     } else {
-        return 'IN';
+        alert("No data available");
+        return false; // No data available
     }
 }
