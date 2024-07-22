@@ -120,7 +120,7 @@ const showPosition = position => {
 
     document.getElementById("currentLatitude").value = latitude;
     document.getElementById("currentLongitude").value = longitude;
-    //document.getElementById("locationAccuracy").textContent = `Accuracy: ${accuracy} meters`;
+    document.getElementById("locationAccuracy").textContent = `Accuracy: ${accuracy} meters`;
 };
 
 // Function to check if location is within the allowed range (100 meters)
