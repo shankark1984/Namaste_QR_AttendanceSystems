@@ -1,12 +1,11 @@
 const MAX_DISTANCE_KM = 0.1; // Approximately 100 meters
-const MAX_ACCURACY_METERS = 100; // Maximum acceptable accuracy in meters
 const SCAN_DELAY = 1000;
 let empCode = null;
 
 // Utility function to format date and time
 const formatDateTime = date => {
     const pad = num => String(num).padStart(2, "0");
-    return `${pad(date.getDate())}-${pad(date.getMonth() + 1)}-${pad(date.getFullYear())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    return `${pad(date.getDate())}-${pad(date.getMonth() + 1)}-${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 };
 
 // DOM Ready function
@@ -22,14 +21,15 @@ const domReady = fn => {
 const onScanSuccess = async (decodeText, decodeResult) => {
     const splits = decodeText.split(",");
     console.log(splits);
-
     if (splits[0] === "Site") {
         if (!empCode) {
             alert("Please scan employee card first.");
             return;
         }
         getLocation();
+
         document.getElementById("siteCodeDisplay").textContent = `Site Code: ${splits[1]}`;
+        document.getElementById("siteCodeDisplay").style.display = "block";
         document.getElementById("siteID").value = splits[1];
         document.getElementById("workOrderNo").value = splits[2];
         document.getElementById("siteLatitude").value = splits[3];
@@ -46,13 +46,14 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         empCode = splits[1];
         const empExists = await searchEmpCodeMatch(empCode);
 
-        if (!empExists) return; // Stop execution if employee doesn't exist or is deactive
-        
+        if (!empExists) {
+            return; // Stop execution if employee doesn't exist or is deactive
+        }
         await searchEmpCode(empCode);
 
         document.getElementById("empCode").value = splits[1];
         document.getElementById("empName").value = splits[2];
-        
+
         const empNameDisplayElement = document.getElementById("empNameDisplay");
         if (empNameDisplayElement) {
             empNameDisplayElement.textContent = `Emp Name: ${splits[2]}`;
@@ -63,21 +64,26 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         console.log("Emp Code:", splits[1]);
         console.log("Emp Name:", splits[2]);
 
+        document.getElementById("datetime").value = formatDateTime(new Date());
+
         // Set logStatus dynamically based on searchLogStatus result
         const logStatus = await searchLogStatus(empCode);
         console.log("logStatus:", logStatus); // Debug log
         document.getElementById("logStatus").value = logStatus;
-        document.getElementById("logStatus1").textContent = `LOG ${logStatus}`;
+        document.getElementById("logStatus1").textContent = "LOG" + logStatus;
 
-        document.getElementById("dataAttendance").textContent = "Current Month Attendance Details";
+
+        document.getElementById("dataAttendance").textContent = `Current Month Attendance Details`;
         // Fetch and display data in table
         await searchEmpCode(empCode);
+
     }
 }
 
+
 // Initialize QR code scanner
 domReady(() => {
-    const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
+    const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbos: 250 });
     htmlscanner.render(onScanSuccess);
 });
 
@@ -91,6 +97,7 @@ const getLocation = () => {
         });
     } else {
         alert("Geolocation is not supported by this browser.");
+
     }
 };
 
@@ -98,33 +105,19 @@ const getLocation = () => {
 const showPosition = position => {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    const accuracy = position.coords.accuracy; // Accuracy in meters
 
-    // Debugging: Log current position and accuracy
+    // Debugging: Log current position
     console.log("Current Position Latitude:", latitude);
     console.log("Current Position Longitude:", longitude);
-    console.log("Position Accuracy (meters):", accuracy);
-
-    if (accuracy >= MAX_ACCURACY_METERS) {
-        alert("Your current location's accuracy is too low. Please move to a location with better GPS signal.");
-        document.getElementById("siteCodeDisplay").style.display = "none";
-        console.log("Current Position Accuracy (meters):", accuracy);
-        return;
-    }
 
     if (!isValidLocation(latitude, longitude)) {
-        alert("Your current location is not within the allowed range.");
+        alert("Your current location is not within the allowed range. Please enable high accuracy mode on your device.");
         document.getElementById("siteCodeDisplay").style.display = "none";
         return;
     }
 
     document.getElementById("currentLatitude").value = latitude;
     document.getElementById("currentLongitude").value = longitude;
-<<<<<<< HEAD
-    document.getElementById("locationAccuracy").textContent = `Accuracy: ${accuracy} meters`;
-=======
-    //document.getElementById("locationAccuracy").textContent = `Accuracy: ${accuracy} meters`;
->>>>>>> 10eb243a22882cb140af8b1168152be6181d8566
 };
 
 // Function to check if location is within the allowed range (100 meters)
@@ -141,7 +134,6 @@ const isValidLocation = (latitude, longitude) => {
     // Debugging: Log calculated distance
     console.log("Calculated Distance:", distance);
 
-    // Check if the distance is within the acceptable range
     return distance <= MAX_DISTANCE_KM;
 };
 
@@ -170,7 +162,6 @@ const showError = error => {
     };
     alert(errorMessages[error.code]);
 };
-
 // Google Sheets API Fetch Function
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA'; // Replace with your API key
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E'; // Replace with your Google Sheet ID
@@ -191,7 +182,7 @@ async function fetchData() {
         // Extract and sort the data
         const values = data.values;
         const sortedData = sortDataByDate(values);
-        
+
         return sortedData;
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -209,6 +200,7 @@ function sortDataByDate(data) {
     });
 }
 
+
 async function matchedEmpfetchData() {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${empRange}?key=${API_KEY}`;
     console.log("Fetching data from URL:", url); // Debugging output
@@ -218,12 +210,11 @@ async function matchedEmpfetchData() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Fetched data for employee match:", data); // Debugging output
-
+        console.log("Fetched data:", data); // Debugging output
         return data.values;
     } catch (error) {
         console.error("Error fetching data:", error);
-        alert("Failed to fetch employee data from Google Sheets. Please check console for more details.");
+        alert("Failed to fetch data from Google Sheets. Please check console for more details.");
     }
 }
 
@@ -250,7 +241,7 @@ function populateTable(data) {
         let currentRowSpanCell = null;
         data.forEach((row, index) => {
             const tr = document.createElement('tr');
-            
+
             row.forEach((cell, cellIndex) => {
                 const td = document.createElement('td');
                 td.textContent = cell;
@@ -314,7 +305,7 @@ function processInOutTimes(data) {
     dateMap.forEach(({ inTimes, outTimes, empCodes }, date) => {
         const sortedInTimes = inTimes.sort((a, b) => new Date(`1970-01-01T${a.time}`) - new Date(`1970-01-01T${b.time}`));
         const sortedOutTimes = outTimes.sort((a, b) => new Date(`1970-01-01T${a.time}`) - new Date(`1970-01-01T${b.time}`));
-        
+
         const empTotalWorkingHours = {};
 
         // Initialize total working hours map for each employee
@@ -375,8 +366,10 @@ fetchData();
 async function searchEmpCode(empCode) {
     const data = await fetchData();
     if (data && data.length > 0) {
-        // Assuming empCode is in the second column
+        // Assuming empCode is in the first column
         const filteredData = data.filter(row => row[1] === empCode);
+        // Include the header row (if you still need it for any purpose, otherwise skip this)
+        // filteredData.unshift(data[0]);  // Commented out because we do not need header for the table
         const processedData = processInOutTimes(filteredData);
         populateTable(processedData);
     }
@@ -433,5 +426,9 @@ async function searchLogStatus(empCode) {
     console.log("Latest log status for empCode:", empCode, "is:", latestLogStatus); // Debugging output
 
     // Toggle between 'IN' and 'OUT' based on the latest log status
-    return latestLogStatus === 'IN' ? 'OUT' : 'IN';
+    if (latestLogStatus === 'IN') {
+        return 'OUT';
+    } else {
+        return 'IN';
+    }
 }

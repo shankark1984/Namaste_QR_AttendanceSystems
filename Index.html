@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Namaste</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.0.2/jsQR.js"></script>
     <style>
         table {
             width: 100%;
@@ -30,19 +29,18 @@
 
 <body onload="currentLocation()">
     <div class="container">
-        
-        <div class="section" >
+        <div class="section">
             <img class="logo" src="img/Logo.png" alt="Namaste" width="50%">
             <!-- Display empCode above camera view -->
             <div>
-                <p id="empNameDisplay" class="emp-code-display"></p> 
+                <p id="empNameDisplay" class="emp-code-display"></p>
                 <p id="siteCodeDisplay" class="emp-code-display"></p>
             </div>
 
             <div id="my-qr-reader"></div>
             <div class="container"></div>
             <form class="gform pure-form pure-form-stacked" method="POST" data-email="example@email.net"
-                action="https://script.google.com/macros/s/AKfycbyx3Lml6A0n6IyeAt540VDxZHJOjHAp1lENODlfdrGNRrCA99mWAN5cJ4uoPmHqgOIocw/exec">
+                action="https://script.google.com/macros/s/AKfycbzOn0q1VH-jeeb7L108bBpbXGf8DEExdhetvKevcQ5JxOQrwQZ8BQMpsfetA136xKUPxw/exec">
                 <div>
                     <div>
                         <label for="empCode">Emp Code</label>
@@ -86,25 +84,21 @@
                         <input type="text" id="logStatus" name="logStatus" placeholder="Log Status">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-light text-primary w-100 py-3" id="logStatus1">Login</button>
-                <button type="submit" class="btn btn-light text-primary w-100 py-3" id="logStatus1">Logout</button>
+                <button type="submit" class="btn btn-light text-primary w-100 py-3" id="logStatus1">Time Log</button>
             </form>
-            <footer>
-                <span class="text-white"><i></i><b>AllEdge Soft & Logic (OPC) Pvt. Ltd.</b>, All rights reserved.</span>
-                <p id="demo"></p>
-            </footer>
+            <span class="text-white"><i></i><b>AllEdge Soft & Logic (OPC) Pvt. Ltd.</b>, All rights reserved.</span>
+
+            <p id="demo"></p>
         </div>
-        
-        <p id="dataAttendance"></p>
+        <p id="dataAttandence"></p>
         <table id="data-table">
             <thead>
                 <tr id="table-header"></tr>
             </thead>
             <tbody id="table-body"></tbody>
         </table>
-    
-    </div>
 
+    </div>
 
     <script src="qrcodescanner.js"></script>
     <script src="script.js"></script>
@@ -116,7 +110,6 @@
         function currentLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showCurrentPosition);
-                enableHighAccuracy: true; // Request high accuracy mode
             } else {
                 y.innerHTML = "Geolocation is not supported by this browser.";
             }
