@@ -69,7 +69,7 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         document.getElementById("logStatus").value = logStatus;
         document.getElementById("logStatus1").textContent = `LOG ${logStatus}`;
 
-        document.getElementById("dataAttendance").textContent = `Current Month Attendance Details`;
+        document.getElementById("dataAttendance").textContent = "Current Month Attendance Details";
         // Fetch and display data in table
         await searchEmpCode(empCode);
     }
@@ -105,9 +105,10 @@ const showPosition = position => {
     console.log("Current Position Longitude:", longitude);
     console.log("Position Accuracy (meters):", accuracy);
 
-    if (accuracy > MAX_ACCURACY_METERS) {
+    if (accuracy >= MAX_ACCURACY_METERS) {
         alert("Your current location's accuracy is too low. Please move to a location with better GPS signal.");
         document.getElementById("siteCodeDisplay").style.display = "none";
+        console.log("Current Position Accuracy (meters):", accuracy);
         return;
     }
 
