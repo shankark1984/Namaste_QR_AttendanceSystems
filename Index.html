@@ -6,15 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Namaste</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center; /* Center align all content */
+        }
+
+
+        #table-body td[rowspan] {
+            vertical-align: middle;
+            text-align: center;
+        }
+    </style>
+         
 </head>
 
 <body onload="currentLocation()">
     <div class="container">
-        <div class="section">
+        
+        <div class="section" >
             <img class="logo" src="img/Logo.png" alt="Namaste" width="50%">
             <!-- Display empCode above camera view -->
             <div>
-                <p id="empNameDisplay" class="emp-code-display"></p>
+                <p id="empNameDisplay" class="emp-code-display"></p> 
                 <p id="siteCodeDisplay" class="emp-code-display"></p>
             </div>
 
@@ -67,10 +87,12 @@
                 </div>
                 <button type="submit" class="btn btn-light text-primary w-100 py-3" id="logStatus1">Time Log</button>
             </form>
-            <span class="text-white"><i></i><b>AllEdge Soft & Logic (OPC) Pvt. Ltd.</b>, All rights reserved.</span>
-
-            <p id="demo"></p>
+            <footer>
+                <span class="text-white"><i></i><b>AllEdge Soft & Logic (OPC) Pvt. Ltd.</b>, All rights reserved.</span>
+                <p id="demo"></p>
+            </footer>
         </div>
+
         <p id="dataAttandence"></p>
         <table id="data-table">
             <thead>
@@ -78,8 +100,9 @@
             </thead>
             <tbody id="table-body"></tbody>
         </table>
-
+    
     </div>
+
 
     <script src="qrcodescanner.js"></script>
     <script src="script.js"></script>
@@ -91,6 +114,7 @@
         function currentLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showCurrentPosition);
+                enableHighAccuracy: true; // Request high accuracy mode
             } else {
                 y.innerHTML = "Geolocation is not supported by this browser.";
             }

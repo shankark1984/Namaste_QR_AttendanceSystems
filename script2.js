@@ -1,12 +1,11 @@
 const MAX_DISTANCE_KM = 0.1; // Approximately 100 meters
-const MAX_ACCURACY_METERS = 100; // Maximum acceptable accuracy in meters
 const SCAN_DELAY = 1000;
 let empCode = null;
 
 // Utility function to format date and time
 const formatDateTime = date => {
     const pad = num => String(num).padStart(2, "0");
-    return `${pad(date.getDate())}-${pad(date.getMonth() + 1)}-${pad(date.getFullYear())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    return `${pad(date.getDate())}-${pad(date.getMonth() + 1)}-${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 };
 
 // DOM Ready function
@@ -22,6 +21,7 @@ const domReady = fn => {
 const onScanSuccess = async (decodeText, decodeResult) => {
     const splits = decodeText.split(",");
     console.log(splits);
+
 
     if (splits[0] === "Site") {
         if (!empCode) {
@@ -46,10 +46,11 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         empCode = splits[1];
         const empExists = await searchEmpCodeMatch(empCode);
 
-        if (!empExists) return; // Stop execution if employee doesn't exist or is deactive
-        
+        if (!empExists) {
+            return; // Stop execution if employee doesn't exist or is deactive
+        }
         await searchEmpCode(empCode);
-
+        
         document.getElementById("empCode").value = splits[1];
         document.getElementById("empName").value = splits[2];
         
@@ -63,21 +64,26 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         console.log("Emp Code:", splits[1]);
         console.log("Emp Name:", splits[2]);
 
+        document.getElementById("datetime").value = formatDateTime(new Date());
+
         // Set logStatus dynamically based on searchLogStatus result
         const logStatus = await searchLogStatus(empCode);
         console.log("logStatus:", logStatus); // Debug log
         document.getElementById("logStatus").value = logStatus;
-        document.getElementById("logStatus1").textContent = `LOG ${logStatus}`;
+        document.getElementById("logStatus1").textContent = "LOG" + logStatus;
 
         document.getElementById("dataAttendance").textContent = `Current Month Attendance Details`;
         // Fetch and display data in table
         await searchEmpCode(empCode);
+        
+        
     }
 }
 
+
 // Initialize QR code scanner
 domReady(() => {
-    const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
+    const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbos: 250 });
     htmlscanner.render(onScanSuccess);
 });
 
@@ -86,7 +92,7 @@ const getLocation = () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError, {
             enableHighAccuracy: true, // Request high accuracy mode
-            timeout: 5000, // Set timeout to 5 seconds
+            timeout: 50000, // Set timeout to 5 seconds
             maximumAge: 0 // Disable caching of location
         });
     } else {
@@ -96,30 +102,24 @@ const getLocation = () => {
 
 // Function to show current position
 const showPosition = position => {
+    // const latitude = 12.8892684;
+    // const longitude = 77.63991;
+
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    const accuracy = position.coords.accuracy; // Accuracy in meters
 
-    // Debugging: Log current position and accuracy
+    // Debugging: Log current position
     console.log("Current Position Latitude:", latitude);
     console.log("Current Position Longitude:", longitude);
-    console.log("Position Accuracy (meters):", accuracy);
-
-    if (accuracy > MAX_ACCURACY_METERS) {
-        alert("Your current location's accuracy is too low. Please move to a location with better GPS signal.");
-        document.getElementById("siteCodeDisplay").style.display = "none";
-        return;
-    }
 
     if (!isValidLocation(latitude, longitude)) {
-        alert("Your current location is not within the allowed range.");
-        document.getElementById("siteCodeDisplay").style.display = "none";
+        alert("Your current location is not within the allowed range. Please enable high accuracy mode on your device.");
+        document.getElementById("siteCodeDisplay").style.display='none';
         return;
     }
 
     document.getElementById("currentLatitude").value = latitude;
     document.getElementById("currentLongitude").value = longitude;
-    document.getElementById("locationAccuracy").textContent = `Accuracy: ${accuracy} meters`;
 };
 
 // Function to check if location is within the allowed range (100 meters)
@@ -136,7 +136,6 @@ const isValidLocation = (latitude, longitude) => {
     // Debugging: Log calculated distance
     console.log("Calculated Distance:", distance);
 
-    // Check if the distance is within the acceptable range
     return distance <= MAX_DISTANCE_KM;
 };
 
@@ -170,7 +169,7 @@ const showError = error => {
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA'; // Replace with your API key
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E'; // Replace with your Google Sheet ID
 const RANGE = 'Attendance!A1:H'; // Adjust the range as per your sheet
-const empRange = 'EmployeeDetails!A1:C';
+const empRange='EmployeeDetails!A1:C';
 
 async function fetchData() {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
@@ -182,26 +181,11 @@ async function fetchData() {
         }
         const data = await response.json();
         console.log("Fetched data:", data); // Debugging output
-
-        // Extract and sort the data
-        const values = data.values;
-        const sortedData = sortDataByDate(values);
-        
-        return sortedData;
+        return data.values;
     } catch (error) {
         console.error("Error fetching data:", error);
         alert("Failed to fetch data from Google Sheets. Please check console for more details.");
     }
-}
-
-// Function to sort data by date
-function sortDataByDate(data) {
-    // Assuming the date is in the first column (index 0) and in 'YYYY-MM-DD' format
-    return data.sort((a, b) => {
-        const dateA = new Date(a[0]);
-        const dateB = new Date(b[0]);
-        return dateA - dateB; // Sort in ascending order
-    });
 }
 
 async function matchedEmpfetchData() {
@@ -213,12 +197,11 @@ async function matchedEmpfetchData() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Fetched data for employee match:", data); // Debugging output
-
+        console.log("Fetched data:", data); // Debugging output
         return data.values;
     } catch (error) {
         console.error("Error fetching data:", error);
-        alert("Failed to fetch employee data from Google Sheets. Please check console for more details.");
+        alert("Failed to fetch data from Google Sheets. Please check console for more details.");
     }
 }
 
@@ -232,7 +215,7 @@ function populateTable(data) {
 
     if (data && data.length > 0) {
         // Populate table header
-        const headers = ['Date', 'In Time', 'Out Time', 'Working Hours', 'Consolidated Working Hours for the Day'];
+        const headers = ['Date', 'In Time', 'Out Time', 'Working Hours'];
         headers.forEach(header => {
             const th = document.createElement('th');
             th.textContent = header;
@@ -240,43 +223,27 @@ function populateTable(data) {
         });
 
         // Populate table body with processed data
-        let prevDate = null;
-        let totalRowsForDate = 0;
-        let currentRowSpanCell = null;
-        data.forEach((row, index) => {
+        data.forEach(row => {
             const tr = document.createElement('tr');
-            
-            row.forEach((cell, cellIndex) => {
+            row.forEach(cell => {
                 const td = document.createElement('td');
                 td.textContent = cell;
                 tr.appendChild(td);
-
-                // If this is the "Consolidated Working Hours for the Day" column
-                if (cellIndex === 4) {
-                    if (prevDate === row[0]) {
-                        totalRowsForDate++;
-                        // Remove the cell and update the rowspan of the currentRowSpanCell
-                        currentRowSpanCell.rowSpan = totalRowsForDate;
-                        tr.removeChild(td);
-                    } else {
-                        prevDate = row[0];
-                        totalRowsForDate = 1;
-                        currentRowSpanCell = td;
-                    }
-                }
             });
-
             tableBody.appendChild(tr);
         });
     } else {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = 5; // Now 5 columns
+        td.colSpan = 4; // Only 4 columns
         td.textContent = 'No data available';
         tr.appendChild(td);
         tableBody.appendChild(tr);
     }
 }
+
+
+
 
 function processInOutTimes(data) {
     const dateMap = new Map();
@@ -287,10 +254,8 @@ function processInOutTimes(data) {
         const [date, time] = datetime.split(' ');
 
         if (!dateMap.has(date)) {
-            dateMap.set(date, { inTimes: [], outTimes: [], empCodes: new Set() });
+            dateMap.set(date, { inTimes: [], outTimes: [] });
         }
-
-        dateMap.get(date).empCodes.add(empCode);
 
         if (logStatus.toUpperCase() === 'IN') {
             dateMap.get(date).inTimes.push({ time, row });
@@ -303,26 +268,17 @@ function processInOutTimes(data) {
     });
 
     const processedData = [];
-    const totalWorkingHoursMap = new Map();
 
     // Process data for each date
-    dateMap.forEach(({ inTimes, outTimes, empCodes }, date) => {
+    dateMap.forEach(({ inTimes, outTimes }, date) => {
+        // Sort by time for each status
         const sortedInTimes = inTimes.sort((a, b) => new Date(`1970-01-01T${a.time}`) - new Date(`1970-01-01T${b.time}`));
         const sortedOutTimes = outTimes.sort((a, b) => new Date(`1970-01-01T${a.time}`) - new Date(`1970-01-01T${b.time}`));
-        
-        const empTotalWorkingHours = {};
-
-        // Initialize total working hours map for each employee
-        empCodes.forEach(empCode => {
-            empTotalWorkingHours[empCode] = 0;
-        });
 
         // Match In and Out times
         while (sortedInTimes.length && sortedOutTimes.length) {
             const inEntry = sortedInTimes.shift();
             const outEntry = sortedOutTimes.shift();
-
-            const [inTimestamp, inEmpCode, inEmpName, inDatetime, inSiteID, inWorkOrderNo, inLogStatus] = inEntry.row;
 
             // Calculate working hours
             const inDateTime = new Date(`1970-01-01T${inEntry.time}`);
@@ -332,46 +288,31 @@ function processInOutTimes(data) {
             const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
             const workingHours = `${hours}:${minutes.toString().padStart(2, '0')}`;
 
-            empTotalWorkingHours[inEmpCode] += diffMs;
-
-            processedData.push([date, inEntry.time, outEntry.time, workingHours, '']);
+            processedData.push([date, inEntry.time, outEntry.time, workingHours]);
         }
 
         // Handle cases with extra inTimes or outTimes
         sortedInTimes.forEach(inEntry => {
-            processedData.push([date, inEntry.time, '', '', '']);
+            processedData.push([date, inEntry.time, '', '']);
         });
 
         sortedOutTimes.forEach(outEntry => {
-            processedData.push([date, '', outEntry.time, '', '']);
-        });
-
-        // Update total working hours for each employee
-        Object.keys(empTotalWorkingHours).forEach(empCode => {
-            const totalMs = empTotalWorkingHours[empCode];
-            const totalHours = Math.floor(totalMs / (1000 * 60 * 60));
-            const totalMinutes = Math.floor((totalMs % (1000 * 60 * 60)) / (1000 * 60));
-            const totalWorkingHours = `${totalHours}:${totalMinutes.toString().padStart(2, '0')}`;
-
-            processedData.forEach(row => {
-                if (row[0] === date) {
-                    row[4] = totalWorkingHours;
-                }
-            });
+            processedData.push([date, '', outEntry.time, '']);
         });
     });
 
     return processedData;
 }
 
-// Call fetchData to populate the table
-fetchData();
+
 
 async function searchEmpCode(empCode) {
     const data = await fetchData();
     if (data && data.length > 0) {
-        // Assuming empCode is in the second column
+        // Assuming empCode is in the first column
         const filteredData = data.filter(row => row[1] === empCode);
+        // Include the header row (if you still need it for any purpose, otherwise skip this)
+        // filteredData.unshift(data[0]);  // Commented out because we do not need header for the table
         const processedData = processInOutTimes(filteredData);
         populateTable(processedData);
     }
@@ -428,5 +369,9 @@ async function searchLogStatus(empCode) {
     console.log("Latest log status for empCode:", empCode, "is:", latestLogStatus); // Debugging output
 
     // Toggle between 'IN' and 'OUT' based on the latest log status
-    return latestLogStatus === 'IN' ? 'OUT' : 'IN';
+    if (latestLogStatus === 'IN') {
+        return 'OUT';
+    } else {
+        return 'IN';
+    }
 }
