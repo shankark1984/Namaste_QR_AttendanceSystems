@@ -12,17 +12,19 @@
             border-collapse: collapse;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #000;
             padding: 8px;
-            text-align: center; /* Center align all content */
+            text-align: center;
+            /* Center align all content */
         }
 
         #table-body td[rowspan] {
             vertical-align: middle;
             text-align: center;
         }
-    </style>       
+    </style>
 </head>
 
 <body onload="currentLocation()">
@@ -38,75 +40,81 @@
             <div id="my-qr-reader"></div>
             <div class="container"></div>
             <form class="gform pure-form pure-form-stacked" method="POST" data-email="example@email.net"
-            action="https://script.google.com/macros/s/AKfycbzOn0q1VH-jeeb7L108bBpbXGf8DEExdhetvKevcQ5JxOQrwQZ8BQMpsfetA136xKUPxw/exec">
-            <div>
+                action="https://script.google.com/macros/s/AKfycbzRHFOJWR-hbLsM70P0tMnAct-A6SOtVbRu6eJKBM47q0tlV8HlAU7LVpjK8nj3jL2fCw/exec">
                 <div>
-                    <label for="empCode">Emp Code</label>
-                    <input type="text" id="empCode" name="empCode" placeholder="Emp Code">
+                    <div>
+                        <label for="empCode">Emp Code</label>
+                        <input type="text" id="empCode" name="empCode" placeholder="Emp Code">
+                    </div>
+                    <div>
+                        <label for="empName">Emp Name</label>
+                        <input type="text" id="empName" name="empName" placeholder="Emp Name">
+                    </div>
+                    <div>
+                        <label for="siteID">Site ID</label>
+                        <input type="text" id="siteID" name="siteID" placeholder="Site ID">
+                    </div>
+                    <div>
+                        <label for="workOrderNo">Work Order No</label>
+                        <input type="text" id="workOrderNo" name="workOrderNo" placeholder="Work Order No">
+                    </div>
+                    <div>
+                        <label for="indatetime">In Date & Time</label>
+                        <input type="text" id="indatetime" name="indatetime" placeholder="In Date & Time">
+                    </div>
+                    <div>
+                        <label for="outdatetime">Out Date & Time</label>
+                        <input type="text" id="outdatetime" name="outdatetime" placeholder="Out Date & Time">
+                    </div>
+                    <div>
+                        <label for="incurrentLatitude">In Current Latitude</label>
+                        <input type="text" id="incurrentLatitude" name="incurrentLatitude"
+                            placeholder="In Current Latitude">
+                    </div>
+                    <div>
+                        <label for="incurrentLongitude">In Current Longitude</label>
+                        <input type="text" id="incurrentLongitude" name="incurrentLongitude"
+                            placeholder="In Current Longitude">
+                    </div>
+                    <div>
+                        <label for="outcurrentLatitude">Out Current Latitude</label>
+                        <input type="text" id="outcurrentLatitude" name="outcurrentLatitude"
+                            placeholder="Out Current Latitude">
+                    </div>
+                    <div>
+                        <label for="outcurrentLongitude">Out Current Longitude</label>
+                        <input type="text" id="outcurrentLongitude" name="outcurrentLongitude"
+                            placeholder="Out Current Longitude">
+                    </div>
+                    <div>
+                        <label for="insiteLatitude">In Site Latitude</label>
+                        <input type="text" id="insiteLatitude" name="insiteLatitude" placeholder="In Site Latitude">
+                    </div>
+                    <div>
+                        <label for="insiteLongitude">In Site Longitude</label>
+                        <input type="text" id="insiteLongitude" name="insiteLongitude" placeholder="In Site Longitude">
+                    </div>
+                    <div>
+                        <label for="outsiteLatitude">Out Site Latitude</label>
+                        <input type="text" id="outsiteLatitude" name="outsiteLatitude" placeholder="Out Site Latitude">
+                    </div>
+                    <div>
+                        <label for="outsiteLongitude">Out Site Longitude</label>
+                        <input type="text" id="outsiteLongitude" name="outsiteLongitude"
+                            placeholder="Out Site Longitude">
+                    </div>
+                    <div>
+                        <label for="logStatus">Log Status</label>
+                        <input type="text" id="logStatus" name="logStatus" placeholder="Log Status">
+                    </div>
                 </div>
-                <div>
-                    <label for="empName">Emp Name</label>
-                    <input type="text" id="empName" name="empName" placeholder="Emp Name">
-                </div>
-                <div>
-                    <label for="siteID">Site ID</label>
-                    <input type="text" id="siteID" name="siteID" placeholder="Site ID">
-                </div>
-                <div>
-                    <label for="workOrderNo">Work Order No</label>
-                    <input type="text" id="workOrderNo" name="workOrderNo" placeholder="Work Order No">
-                </div>
-                <div>
-                    <label for="indatetime">In Date & Time</label>
-                    <input type="text" id="indatetime" name="indatetime" placeholder="In Date & Time">
-                </div>
-                <div>
-                    <label for="outdatetime">Out Date & Time</label>
-                    <input type="text" id="outdatetime" name="outdatetime" placeholder="Out Date & Time">
-                </div>
-                <div>
-                    <label for="incurrentLatitude">In Current Latitude</label>
-                    <input type="text" id="incurrentLatitude" name="incurrentLatitude" placeholder="In Current Latitude">
-                </div>
-                <div>
-                    <label for="incurrentLongitude">In Current Longitude</label>
-                    <input type="text" id="incurrentLongitude" name="incurrentLongitude" placeholder="In Current Longitude">
-                </div>
-                <div>
-                    <label for="outcurrentLatitude">Out Current Latitude</label>
-                    <input type="text" id="outcurrentLatitude" name="outcurrentLatitude" placeholder="Out Current Latitude">
-                </div>
-                <div>
-                    <label for="outcurrentLongitude">Out Current Longitude</label>
-                    <input type="text" id="outcurrentLongitude" name="outcurrentLongitude" placeholder="Out Current Longitude">
-                </div>
-                <div>
-                    <label for="insiteLatitude">In Site Latitude</label>
-                    <input type="text" id="insiteLatitude" name="insiteLatitude" placeholder="In Site Latitude">
-                </div>
-                <div>
-                    <label for="insiteLongitude">In Site Longitude</label>
-                    <input type="text" id="insiteLongitude" name="insiteLongitude" placeholder="In Site Longitude">
-                </div>
-                <div>
-                    <label for="outsiteLatitude">Out Site Latitude</label>
-                    <input type="text" id="outsiteLatitude" name="outsiteLatitude" placeholder="Out Site Latitude">
-                </div>
-                <div>
-                    <label for="outsiteLongitude">Out Site Longitude</label>
-                    <input type="text" id="outsiteLongitude" name="outsiteLongitude" placeholder="Out Site Longitude">
-                </div>
-                <div>
-                    <label for="logStatus">Log Status</label>
-                    <input type="text" id="logStatus" name="logStatus" placeholder="Log Status">
-                </div>
-            </div>
-            <!-- Your existing buttons in HTML -->
-<button type="submit" class="btn btn-light text-primary w-100 py-3" id="login" disabled>LOGIN</button>
-<button type="submit" class="btn btn-light text-primary w-100 py-3" id="logout" disabled>LOGOUT</button>
+                <!-- Your existing buttons in HTML  id="login" disabled--> 
+                <button type="submit" class="btn btn-light text-primary w-100 py-3">LOGIN</button>
+                <button type="submit" class="btn btn-light text-primary w-100 py-3" id="logout" disabled>LOGOUT</button>
 
-        </form>
-        <div id="logStatus"></div>
+            </form>
+
+            <div id="logStatus"></div>
             <span class="text-white"><i></i><b>AllEdge Soft & Logic (OPC) Pvt. Ltd.</b>, All rights reserved.</span>
 
             <p id="demo"></p>
