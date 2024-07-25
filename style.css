@@ -24,7 +24,7 @@ body {
 }
 
 .section {
-    background-color: #9a7575;
+    background-color: #b68b63;
     padding: 10px 50px;
     border: 1.5px solid #b2b2b2;
     border-radius: 0.25em;
@@ -79,12 +79,12 @@ video {
 
 .logo {
     padding: 5px;
-    border: 2px solid #23b023;
+    /* border: 2px solid #23b023; */
 }
-
+/* 
 input, label {
     display: none;
-}
+} */
 
 .column {
     float: left;
@@ -123,3 +123,17 @@ html, body {
 .emp-code-display {
     margin: 0; /* Remove default margin */
 }
+
+.homebody{
+
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    height:auto;
+    width: auto;
+    box-sizing: border-box;
+    text-align: center;
+    background: rgba(74, 99, 19, 0.66);
+}
+
