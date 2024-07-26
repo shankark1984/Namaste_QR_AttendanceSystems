@@ -50,10 +50,10 @@ const onScanSuccess = async (decodeText, decodeResult) => {
             return; // Stop execution if employee doesn't exist or is deactive
         }
         await searchEmpCode(empCode);
-        
+
         document.getElementById("empCode").value = splits[1];
         document.getElementById("empName").value = splits[2];
-        
+
         const empNameDisplayElement = document.getElementById("empNameDisplay");
         if (empNameDisplayElement) {
             empNameDisplayElement.textContent = `Emp Name: ${splits[2]}`;
@@ -67,7 +67,7 @@ const onScanSuccess = async (decodeText, decodeResult) => {
 
         document.getElementById("dataAttandence").textContent = `Current Month Attendance Details`;
         // Fetch and display data in table
-        
+
     }
 }
 
@@ -157,7 +157,7 @@ const showError = error => {
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA'; // Replace with your API key
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E'; // Replace with your Google Sheet ID
 const RANGE = 'Attendance!A1:I'; // Adjust the range as per your sheet
-const empRange='EmployeeDetails!A1:C';
+const empRange = 'EmployeeDetails!A1:C';
 
 async function fetchData() {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
@@ -288,7 +288,7 @@ async function searchEmpCodeMatch(empCode) {
     if (data && data.length > 0) {
         // Assuming empCode is in the first column and status is in the third column
         const matchData = data.filter(row => row[0] === empCode);
-        
+
         if (matchData.length > 0) {
             const status = matchData[0][2];
             if (status === "Active") {
