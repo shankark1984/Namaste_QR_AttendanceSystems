@@ -201,7 +201,7 @@ function populateTable(data) {
 
     if (data && data.length > 0) {
         // Populate table header
-        const headers = ['Date', 'In Time', 'Out Time', 'Working Hours'];
+        const headers = ['In Date & Time', 'Out Date & Time', 'Working Hr\'s',"Total Working Hr\'s"];
         headers.forEach(header => {
             const th = document.createElement('th');
             th.textContent = header;
