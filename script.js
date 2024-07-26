@@ -35,8 +35,6 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         document.getElementById("outsiteLatitude").value = splits[3];
         document.getElementById("outsiteLongitude").value = splits[4];
 
-        // document.getElementById("siteLatitude").textContent = splits[3];
-        // document.getElementById("siteLongitude").textContent = splits[4];
 
         // Debugging: Log site coordinates
         console.log("Site Latitude:", splits[3]);
