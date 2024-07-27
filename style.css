@@ -82,7 +82,8 @@ video {
     /* border: 2px solid #23b023; */
 }
 
-input, label {
+input,
+label {
     display: none;
 }
 
@@ -90,7 +91,8 @@ input, label {
     float: left;
     width: 50%;
     padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
+    height: 300px;
+    /* Should be removed. Only for demonstration */
 }
 
 table {
@@ -98,42 +100,48 @@ table {
     border-collapse: collapse;
 }
 
-table, th, td {
+table,
+th,
+td {
     border: 1px solid black;
 }
 
-th, td {
+th,
+td {
     padding: 8px;
     text-align: center;
     font-size: small;
 }
 
 /* New styles */
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
 }
 
 .emp-code-container {
     display: flex;
-    justify-content: center; /* Aligns items horizontally to the center */
-    gap: 10px; /* Optional: Adds space between the items */
+    justify-content: center;
+    /* Aligns items horizontally to the center */
+    gap: 10px;
+    /* Optional: Adds space between the items */
 }
 
 .emp-code-display {
-    margin: 0; /* Remove default margin */
+    margin: 0;
+    /* Remove default margin */
 }
 
-.homebody{
+.homebody {
 
     display: flex;
     justify-content: center;
     margin: 0;
     padding: 0;
-    height:auto;
+    height: auto;
     width: auto;
     box-sizing: border-box;
     text-align: center;
     background: rgba(74, 99, 19, 0.66);
 }
-
