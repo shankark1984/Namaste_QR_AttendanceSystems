@@ -1,4 +1,4 @@
-const MAX_DISTANCE_KM = 10; // Approximately 100 meters
+const MAX_DISTANCE_KM = 1; // Approximately 100 meters
 const SCAN_DELAY = 1000;
 let empCode = null;
 
@@ -307,13 +307,14 @@ async function searchEmpCodeMatch(empCode) {
         return false; // No data available
     }
 }
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js').then((registration) => {
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      }, (err) => {
-        console.log('ServiceWorker registration failed: ', err);
-      });
-    });
-  }
+
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', () => {
+//       navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+//         console.log('ServiceWorker registration successful with scope: ', registration.scope);
+//       }, (err) => {
+//         console.log('ServiceWorker registration failed: ', err);
+//       });
+//     });
+//   }
   
