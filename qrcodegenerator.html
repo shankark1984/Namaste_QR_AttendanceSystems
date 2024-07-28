@@ -1,101 +1,30 @@
+<!--Index.html-->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Namaste</title>
     <link rel="stylesheet" href="./qrStyle.css" />
+
     <!-- External QR code library -->
-    <!--This is the liberary which helps 
-        to convert simple data to the images-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
-    </script>
-    <style>
-        body {
-            background-color: #626a67;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 10px;
-            overflow: hidden;
-            background-color: #f3f3f3;
-            border-bottom: 1px solid #e7e7e7;
-        }
-
-        li {
-            float: left;
-        }
-
-        li a {
-            display: block;
-            color: #666;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        li a:hover:not(.active) {
-            background-color: #ddd;
-        }
-
-        li a.active {
-            color: white;
-            background-color: #04AA6D;
-        }
-
-        .navbar-logo {
-            float: left;
-            padding: 0;
-            margin: 0;
-        }
-
-        .navbar-logo img {
-            display: block;
-            height: 50px;
-            /* Adjust the height as needed */
-            width: auto;
-        }
-
-        .nav-links {
-            float: right;
-        }
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
 <body>
-    <div>
-        <div>
-            <ul>
-                <li class="navbar-logo">
-                    <img src="img/Logo.png" alt="ViShRuTa" style="color: red;font-weight: bold;">
-                    <!-- Replace with your image URL -->
-                </li>
-                <li class="nav-links"><a href="Index.html">Attendance</a></li>
-                <li class="nav-links"><a class="active" href="qrcodegenerator.html">QR Code Generator</a></li>
-            </ul>
-        </div>
-        <div>
-            <div class="header">
-                <div class="box">
-                    <h1>
-                        QR Code Generator
-                    </h1>
-                    <hr />
-                    <div class="sqrcode"></div>
-                    <div class="qrcode"></div>
-                    <input type="text" placeholder="Paste a URL or enter  
-                                text, then press enter" onchange="generateQr()" />
-                    <!--generateQr() is the fuction which helps 
-                to convert data into QR using the js library-->
-                </div>
-            </div>
-        </div>
 
+    <div class="topnav" id="myTopnav">
+        <img src="img/Logo.png" alt="ViShRuTa" class="logo">
+        <a href="home.html">Home</a>
+        <a href="Index.html">Attendance</a>
+        <a class="active" href="qrcodegenerator.html">QR Code Generator</a>
+    </div>
+    <div class="header">
+        <div class="box">
+            <h1>QR Code Generator</h1>
+            <hr />
+            <div class="sqrcode"></div>
+            <div class="qrcode"></div>
+            <input type="text" placeholder="Enter text, then press enter" onchange="generateQr()" />
+        </div>
     </div>
     <script src="./QrScript.js"></script>
 </body>
