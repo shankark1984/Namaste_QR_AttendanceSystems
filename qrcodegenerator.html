@@ -1,32 +1,55 @@
-<!--Index.html-->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
     <link rel="stylesheet" href="./qrStyle.css" />
-
-    <!-- External QR code library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="./QrScript.js" defer></script>
+    <style>
+        .input-container {
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 
 <body>
-
-    <div class="topnav" id="myTopnav">
+    <div class="topnav">
         <img src="img/Logo.png" alt="ViShRuTa" class="logo">
-        <a href="home.html">Home</a>
-        <a href="Index.html">Attendance</a>
-        <a class="active" href="qrcodegenerator.html">QR Code Generator</a>
+        <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+        <div id="navLinks" class="nav-links">
+            <a class="active" href="home.html">Home</a>
+            <a href="Index.html">Attendance</a>
+            <a href="qrcodegenerator.html">QR Code Generator</a>
+        </div>
     </div>
+
     <div class="header">
         <div class="box">
             <h1>QR Code Generator</h1>
-            <hr />
-            <div class="sqrcode"></div>
-            <div class="qrcode"></div>
-            <input type="text" placeholder="Enter text, then press enter" onchange="generateQr()" />
+
+            <!-- Dropdown list for selection -->
+            <select id="typeSelect" onchange="updateInputBoxes()">
+                <option value="">Select Type</option>
+                <option value="Emp">Emp</option>
+                <option value="Site">Site</option>
+            </select>
+
+            <!-- Container for input boxes -->
+            <div id="inputContainer"></div>
+
+            <button id="downloadBtn" onclick="downloadQrCode()">Download QR Code</button>
+
+            <div class="sqrcode" id="qrcode" style="margin: 20px;"></div>
         </div>
     </div>
-    <script src="./QrScript.js"></script>
+
+    <footer class="footer">
+        <p>&copy; AllEdge Soft & Logic (OPC) Pvt. Ltd., All rights reserved.</p>
+    </footer>
 </body>
 
 </html>

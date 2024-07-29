@@ -4,31 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Namaste</title>
+    <title>QR Code Generator</title>
     <link rel="stylesheet" href="./qrStyle.css" />
-
+    <!-- External QR code library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
 <body>
-
-    <div class="topnav" id="myTopnav">
+    <div class="topnav">
         <img src="img/Logo.png" alt="ViShRuTa" class="logo">
-        <a class="active" href="home.html">Home</a>
-        <a href="Index.html">Attendance</a>
-        <a href="qrcodegenerator.html">QR Code Generator</a>
-
+        <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+        <div id="navLinks" class="nav-links">
+            <a class="active" href="home.html">Home</a>
+            <a href="Index.html">Attendance</a>
+            <a  href="qrcodegenerator.html">QR Code Generator</a>
+        </div>
     </div>
-
+    <div class="header">
+        <!-- <div class="box">
+            <h1>QR Code Generator</h1>
+            <hr />
+            <div id="qrcode"></div>
+            <input type="text" id="qrText" placeholder="Enter text, then press enter" onkeypress="if(event.key === 'Enter') generateQr()" />
+        </div> -->
+    </div>
+    <script src="./QrScript.js"></script>
     <script>
-        function myFunction() {
-            var x = document.getElementById("myTopnav");
-            if (x.className === "topnav") {
-                x.className += " responsive";
+        function toggleMenu() {
+            var navLinks = document.getElementById("navLinks");
+            if (navLinks.style.display === "block") {
+                navLinks.style.display = "none";
             } else {
-                x.className = "topnav";
+                navLinks.style.display = "block";
             }
         }
     </script>
 </body>
 
 </html>
+    

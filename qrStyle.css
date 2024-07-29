@@ -1,76 +1,183 @@
+/* General body styling */
 body {
-	margin: 0;
-	font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  padding-bottom: 60px; /* Add padding to the bottom to ensure content is not hidden under the footer */
+  background: rgba(74, 99, 19, 0.66);
+}
+
+/* Navigation bar styling */
+.topnav {
+  margin-top: 0;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  background-color: #756868;
+  position: fixed; /* Fix the navbar to the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure the topnav is above other content */
+  padding: 0 10px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.2); /* Optional: Add shadow for better visibility */
+}
+
+.topnav .logo {
+  margin-right: auto;
+  width: 200px;
+}
+
+.topnav .menu-icon {
+  display: none;
+  font-size: 30px;
+  cursor: pointer;
+  padding: 14px 16px;
+}
+
+.topnav .nav-links {
+  display: flex;
+  flex-direction: row;
+  z-index: 1000; /* Ensure the nav-links are above other content */
+}
+
+.topnav a {
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  display: block;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+/* Header and content styling */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  min-height: calc(100vh - 68px - 60px); /* Ensure header takes up available space */
+  box-sizing: border-box;
+  margin-top: 60px; /* Ensure content does not hide under the fixed navbar */
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#qrcode {
+  margin: 10px 0;
+}
+
+input[type="text"] {
+  padding: 10px;
+  width: 300px;
+  box-sizing: border-box;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Button styling */
+#downloadBtn {
+  background-color: #4CAF50; /* Green background */
+  border: none; /* Remove borders */
+  color: white; /* White text */
+  padding: 15px 32px; /* Add some padding */
+  text-align: center; /* Center text */
+  text-decoration: none; /* Remove underline */
+  display: inline-block; /* Inline-block display */
+  font-size: 16px; /* Increase font size */
+  margin: 4px 2px; /* Add margins */
+  cursor: pointer; /* Add a pointer cursor on hover */
+  border-radius: 8px; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+#downloadBtn:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Footer styling */
+.footer {
+  background-color: #333; /* Dark background color */
+  color: white; /* White text color */
+  text-align: center; /* Center align text */
+  padding: 10px; /* Add some padding */
+  position: fixed; /* Fixed position */
+  bottom: 0; /* Align to bottom */
+  width: 100%; /* Full width */
+  font-size: 14px; /* Font size */
+  z-index: 1000; /* Ensure footer stays above content */
+}
+
+/* Responsive design for the button */
+@media screen and (max-width: 600px) {
+  #downloadBtn {
+      padding: 12px 24px; /* Adjust padding for smaller screens */
+      font-size: 14px; /* Slightly smaller font size */
   }
-  
-  .topnav {
-	margin-top: 5px;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-	overflow: hidden;
-	background-color: #756868;
-	position: relative;
+}
+
+@media screen and (max-width: 400px) {
+  #downloadBtn {
+      padding: 10px 20px; /* Further adjust padding for very small screens */
+      font-size: 12px; /* Smaller font size */
   }
-  .topnav .logo {
-    margin-right: auto;
 }
-.topnav .nav-menu {
-    list-style-type: none;  /* Remove default list style */
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-.topnav .nav-menu li {
-    margin-left: 20px;  /* Space between menu items */
-}
-.topnav .nav-menu li a:hover {
-    background-color: #ddd;  /* Add a hover effect */
-    color: black;
-}
-.topnav .nav-menu li a.active {
-    background-color: #4CAF50;  /* Highlight the active page */
-    color: white;
-}
-  
-  .topnav a {
-	float: left;
-	color: #f2f2f2;
-	text-align: center;
-	padding: 14px 16px;
-	text-decoration: none;
-	font-size: 17px;
-	display: block;
+
+/* Responsive design for navigation links */
+@media screen and (max-width: 600px) {
+  .topnav .nav-links {
+      display: none; /* Hide links on mobile */
+      flex-direction: column;
+      width: 100%;
+      background-color: #756868;
+      position: absolute;
+      top: 60px; /* Adjust this value as needed */
+      left: 0;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      z-index: 1000; /* Ensure the nav-links are above other content */
   }
 
-  
-  .topnav a:hover {
-	background-color: #ddd;
-	color: black;
+  .topnav a {
+      display: none; /* Hide links on mobile */
   }
-  
-  .topnav a.active {
-	background-color: #04AA6D;
-	color: white;
+
+  .topnav .menu-icon {
+      display: block; /* Show menu icon */
   }
-  img{
-	margin-top: 5px;
-    /* margin-bottom: 5px; */
-	width: 200Px;
-	margin-left: 5px;
+
+  .topnav .nav-links a {
+      text-align: center;
+      padding: 14px;
+      border-top: 1px solid #ddd;
+      color: #f2f2f2;
+      text-decoration: none;
+      display: block;
   }
-  a{
-	margin-top: 5px;
-    margin-bottom: 5px;
+
+  .topnav .nav-links a:hover {
+      background-color: #ddd;
+      color: black;
   }
-  .mobile-container {
-	max-width: 480px;
-	margin: auto;
-	background-color: #555;
-	height: 500px;
-	color: white;
-	border-radius: 10px;
+
+  .topnav .nav-links a.active {
+      background-color: #04AA6D;
+      color: white;
   }
-  .topnav #myLinks {
-	display: none;
-  }
+}

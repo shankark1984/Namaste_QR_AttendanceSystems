@@ -35,8 +35,6 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         document.getElementById("outsiteLatitude").value = splits[3];
         document.getElementById("outsiteLongitude").value = splits[4];
 
-
-        // Debugging: Log site coordinates
         console.log("Site Latitude:", splits[3]);
         console.log("Site Longitude:", splits[4]);
 
@@ -45,7 +43,7 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         const empExists = await searchEmpCodeMatch(empCode);
 
         if (!empExists) {
-            return; // Stop execution if employee doesn't exist or is deactive
+            return; // Stop execution if employee doesn't exist or is inactive
         }
         await searchEmpCode(empCode);
 
@@ -59,19 +57,19 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         document.getElementById("indatetime").value = formatDateTime(new Date());
         document.getElementById("outdatetime").value = formatDateTime(new Date());
 
-        // Debugging: Log employee code and name
         console.log("Emp Code:", splits[1]);
         console.log("Emp Name:", splits[2]);
 
         document.getElementById("dataAttandence").textContent = `Current Month Attendance Details`;
-        // Fetch and display data in table
-
     }
-}
+    else {
+        alert('Incorrect QR Scancer');
+    }
+};
 
 // Initialize QR code scanner
 domReady(() => {
-    const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbos: 250 });
+    const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
     htmlscanner.render(onScanSuccess);
 });
 
@@ -79,9 +77,9 @@ domReady(() => {
 const getLocation = () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError, {
-            enableHighAccuracy: true, // Request high accuracy mode
-            timeout: 5000, // Set timeout to 5 seconds
-            maximumAge: 0 // Disable caching of location
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
         });
     } else {
         alert("Geolocation is not supported by this browser.");
@@ -93,11 +91,11 @@ const showPosition = position => {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
 
-    // Debugging: Log current position
     console.log("Current Position Latitude:", latitude);
     console.log("Current Position Longitude:", longitude);
 
-    if (!isValidLocation(latitude, longitude)) {
+    const isValid = isValidLocation(latitude, longitude, parseFloat(document.getElementById("insiteLatitude").value), parseFloat(document.getElementById("insiteLongitude").value));
+    if (!isValid) {
         alert("Your current location is not within the allowed range. Please enable high accuracy mode on your device.");
         return;
     }
@@ -108,18 +106,13 @@ const showPosition = position => {
     document.getElementById("outcurrentLongitude").value = longitude;
 };
 
-// Function to check if location is within the allowed range (100 meters)
-const isValidLocation = (latitude, longitude) => {
-    const centerLatitude = parseFloat(latitude);//document.getElementById("insiteLatitude").textContent);
-    const centerLongitude = parseFloat(longitude);//document.getElementById("insiteLongitude").textContent);
-
-    // Debugging: Log center position
+// Function to check if location is within the allowed range
+const isValidLocation = (latitude, longitude, centerLatitude, centerLongitude) => {
     console.log("Center Position Latitude:", centerLatitude);
     console.log("Center Position Longitude:", centerLongitude);
 
     const distance = calculateDistance(latitude, longitude, centerLatitude, centerLongitude);
 
-    // Debugging: Log calculated distance
     console.log("Calculated Distance:", distance);
 
     return distance <= MAX_DISTANCE_KM;
@@ -150,6 +143,9 @@ const showError = error => {
     };
     alert(errorMessages[error.code]);
 };
+
+
+
 
 // Google Sheets API Fetch Function
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA'; // Replace with your API key
@@ -201,7 +197,7 @@ function populateTable(data) {
 
     if (data && data.length > 0) {
         // Populate table header
-        const headers = ['In Date & Time', 'Out Date & Time', 'Working Hr\'s',"Total Working Hr\'s"];
+        const headers = ['Date', 'In Date & Time', 'Out Date & Time', 'Working Hr\'s'];
         headers.forEach(header => {
             const th = document.createElement('th');
             th.textContent = header;
@@ -272,10 +268,7 @@ function processInOutTimes(data) {
 async function searchEmpCode(empCode) {
     const data = await fetchData();
     if (data && data.length > 0) {
-        // Assuming empCode is in the first column
         const filteredData = data.filter(row => row[2] === empCode);
-        // Include the header row (if you still need it for any purpose, otherwise skip this)
-        // filteredData.unshift(data[0]);  // Commented out because we do not need header for the table
         const processedData = processInOutTimes(filteredData);
         populateTable(processedData);
     }
@@ -284,37 +277,36 @@ async function searchEmpCode(empCode) {
 async function searchEmpCodeMatch(empCode) {
     const data = await matchedEmpfetchData();
     if (data && data.length > 0) {
-        // Assuming empCode is in the first column and status is in the third column
         const matchData = data.filter(row => row[0] === empCode);
 
         if (matchData.length > 0) {
             const status = matchData[0][2];
             if (status === "Active") {
-                console.log('Employee A', matchData);
-                return true; // Employee exists and is active
+                console.log('Employee Active:', matchData);
+                return true;
             } else {
-                alert("Your Employee Id is blocked, kindly contact your admin");
-                location.reload(); // Refresh the page
-                return false; // Employee exists but is deactive
+                alert("Your Employee ID is blocked, kindly contact your admin.");
+                location.reload();
+                return false;
             }
         } else {
-            alert("Employee doesn't exist, kindly contact your admin");
-            location.reload(); // Refresh the page
-            return false; // Employee doesn't exist
+            alert("Employee doesn't exist, kindly contact your admin.");
+            location.reload();
+            return false;
         }
     } else {
-        alert("No data available");
-        return false; // No data available
+        alert("No data available.");
+        return false;
     }
 }
 
+// Service Worker registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js').then((registration) => {
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      }, (err) => {
-        console.log('ServiceWorker registration failed: ', err);
-      });
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, err => {
+            console.log('ServiceWorker registration failed: ', err);
+        });
     });
-  }
-  
+}
