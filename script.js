@@ -139,10 +139,10 @@ const showError = error => {
         1: "User denied the request for Geolocation.",
         2: "Location information is unavailable.",
         3: "The request to get user location timed out.",
-        0: "An unknown error occurred."
+        0: "An unknown error occurred.."
     };
     alert(errorMessages[error.code]);
-};
+}; 
 
 
 
