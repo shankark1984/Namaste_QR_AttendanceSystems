@@ -81,12 +81,18 @@
                     form.reset();
                     const formElements = form.querySelector(".form-elements");
                     if (formElements && formElements.parentNode) {
-                        formElements.parentNode.removeChild(formElements); // Safely remove form elements
+                        try {
+                            formElements.parentNode.removeChild(formElements); // Safely remove form elements
+                        } catch (error) {
+                            console.error("Error removing form elements:", error);
+                        }
                     }
                     const thankYouMessage = form.querySelector(".thankyou_message");
                     if (thankYouMessage) {
                         thankYouMessage.style.display = "block";
                     }
+                } else {
+                    console.error("Form submission error:", xhr.status, xhr.statusText);
                 }
                 enableAllButtons(form); // Enable buttons after submission
             }
