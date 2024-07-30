@@ -69,7 +69,7 @@ const onScanSuccess = async (decodeText, decodeResult) => {
 
 // Initialize QR code scanner
 domReady(() => {
-    const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
+    let htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
     htmlscanner.render(onScanSuccess);
 });
 
