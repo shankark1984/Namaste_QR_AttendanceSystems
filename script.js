@@ -77,6 +77,12 @@ domReady(() => {
 }
 });
 
+const stopScanner = () => {
+    if (htmlscanner) {
+        htmlscanner.clear(); // Or the method to stop scanning
+    }
+};
+
 // Function to get current location
 const getLocation = () => {
     if (navigator.geolocation) {
