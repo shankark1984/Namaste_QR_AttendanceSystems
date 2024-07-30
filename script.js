@@ -69,8 +69,12 @@ const onScanSuccess = async (decodeText, decodeResult) => {
 
 // Initialize QR code scanner
 domReady(() => {
+    try {
     const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
     htmlscanner.render(onScanSuccess);
+} catch (error) {
+    console.error("Error initializing QR code scanner:", error);
+}
 });
 
 // Function to get current location
