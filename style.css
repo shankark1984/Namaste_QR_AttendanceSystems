@@ -1,34 +1,30 @@
-/* style.css file*/
+/* Basic body styling */
+html,
 body {
     display: flex;
     justify-content: center;
     margin: 0;
     padding: 0;
-    height: 100vh;
+    height: 100%;
     box-sizing: border-box;
     text-align: center;
     background: rgba(74, 99, 19, 0.66);
 }
 
-/* .container {
-    width: 100%;
-    max-width: 500px;
-    margin: 5px;
-} */
+/* Container styling */
 .container {
     width: 100%;
     max-width: 500px;
     margin: 5px;
     display: flex;
     flex-direction: column;
-    /* min-height: 100vh; */
 }
 
 .container h1 {
     color: #ffffff;
 }
 
-
+/* Section styling */
 .section {
     background-color: #bb9090;
     padding: 50px 30px;
@@ -37,12 +33,12 @@ body {
     box-shadow: 0 20px 25px rgba(0, 0, 0, 0.25);
 }
 
+/* QR reader styling */
 #my-qr-reader {
     padding: 20px !important;
     border: 1.5px solid #b2b2b2 !important;
     border-radius: 8px;
 }
-
 
 #my-qr-reader img[alt="Info icon"] {
     display: none;
@@ -53,6 +49,7 @@ body {
     height: 100px !important;
 }
 
+/* Button styling */
 button {
     padding: 10px 20px;
     border: 1px solid #b2b2b2;
@@ -71,35 +68,39 @@ button:hover {
     background-color: #008000;
 }
 
+/* QR code anchor styling */
 #html5-qrcode-anchor-scan-type-change {
     text-decoration: none !important;
     color: #1d9bf0;
 }
 
+/* Video styling */
 video {
     width: 100% !important;
     border: 1px solid #b2b2b2 !important;
     border-radius: 0.25em;
 }
 
+/* Logo styling */
 .logo {
     padding: 5px;
-    /* border: 2px solid #23b023; */
 }
 
+/* Input and label styling */
 input,
 label {
     display: none;
 }
 
+/* Column styling */
 .column {
     float: left;
     width: 50%;
     padding: 10px;
-    height: 300px;
-    /* Should be removed. Only for demonstration */
+    height: 300px; /* Should be removed. Only for demonstration */
 }
 
+/* Table styling */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -118,28 +119,46 @@ td {
     font-size: small;
 }
 
-/* New styles */
-html,
-body {
-    height: 100%;
-    margin: 0;
+/* Data table styling */
+#data-table {
+    border-collapse: collapse; /* Ensures that borders between cells merge */
+    width: 100%;
+    border-top: 2px solid #333; /* Darker border at the top of the table */
+    border-bottom: 2px solid #333; /* Darker border at the bottom of the table */
 }
 
+#table-header th {
+    background-color: #f4f4f4; /* Light gray background for headers */
+    padding: 8px;
+    text-align: left;
+}
+
+#table-body td {
+    padding: 8px;
+    text-align: left;
+}
+
+/* Styles for disabled buttons */
+.btn:disabled {
+    background-color: #e9ecef; /* Light gray background */
+    color: #6c757d; /* Disabled text color */
+    cursor: not-allowed; /* Show not-allowed cursor */
+    opacity: 0.65; /* Slightly transparent */
+}
+
+/* New styles for employee code container */
 .emp-code-container {
     display: flex;
     justify-content: center;
-    /* Aligns items horizontally to the center */
-    gap: 10px;
-    /* Optional: Adds space between the items */
+    gap: 10px; /* Optional: Adds space between the items */
 }
 
 .emp-code-display {
-    margin: 0;
-    /* Remove default margin */
+    margin: 0; /* Remove default margin */
 }
 
+/* Homebody styling */
 .homebody {
-
     display: flex;
     justify-content: center;
     margin: 0;
