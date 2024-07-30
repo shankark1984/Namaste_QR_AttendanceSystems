@@ -1,13 +1,13 @@
 // Constants
-const MAX_DISTANCE_KM = 10; // Distance in km for validation
+const MAX_DISTANCE_KM = 10; // Approximately 100 meters
 const SCAN_DELAY = 1000;
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA';
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E';
 const RANGE = 'Attendance!A1:I';
-const EMP_RANGE = 'EmployeeDetails!A1:C';
+const empRange = 'EmployeeDetails!A1:C';
 
 let empCode = null;
-let latestLogStatus = null; // To store the latest log status
+let latestLogStatus = null; // Added to store the latest log status
 
 // Utility function to format date and time
 const formatDateTime = date => {
@@ -25,7 +25,7 @@ const domReady = fn => {
 };
 
 // Function to handle QR code scan success
-const onScanSuccess = async (decodeText) => {
+const onScanSuccess = async (decodeText, decodeResult) => {
     const splits = decodeText.split(",");
     console.log("Decoded QR code data:", splits);
 
@@ -69,20 +69,9 @@ const onScanSuccess = async (decodeText) => {
 
 // Initialize QR code scanner
 domReady(() => {
-    try {
-        const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
-        htmlscanner.render(onScanSuccess);
-    } catch (error) {
-        console.error("Error initializing QR code scanner:", error);
-    }
+    const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
+    htmlscanner.render(onScanSuccess);
 });
-
-const stopScanner = () => {
-    const htmlscanner = Html5QrcodeScanner.getInstance(); // Ensure you have the right method to get the instance
-    if (htmlscanner) {
-        htmlscanner.clear(); // Or the method to stop scanning
-    }
-};
 
 // Function to get current location
 const getLocation = () => {
@@ -148,13 +137,20 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 
 // Function to show error message
 const showError = error => {
-    const errorMessages = {
-        1: "User denied the request for Geolocation.",
-        2: "Location information is unavailable.",
-        3: "The request to get user location timed out.",
-        0: "An unknown error occurred."
-    };
-    alert(errorMessages[error.code]);
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+            alert("User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            alert("The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            alert("An unknown error occurred.");
+            break;
+    }
 };
 
 // Function to fetch data from Google Sheets
@@ -173,7 +169,7 @@ const fetchDataFromGoogleSheets = async range => {
 
 // Function to search employee code
 const searchEmpCodeMatch = async empCode => {
-    const data = await fetchDataFromGoogleSheets(EMP_RANGE);
+    const data = await fetchDataFromGoogleSheets(empRange);
     if (!data) {
         alert("Failed to fetch data from Google Sheets");
         return false;
@@ -196,7 +192,6 @@ const searchEmpCodeMatch = async empCode => {
     return true;
 };
 
-// Function to update button states
 const updateButtonStates = async empCode => {
     const data = await fetchDataFromGoogleSheets(RANGE);
     if (!data) {
@@ -209,7 +204,7 @@ const updateButtonStates = async empCode => {
 
     // Filter the data by employee code and date
     const today = formatDate(new Date());
-    const filteredData = attendanceData.filter(row => row[2].trim() === empCode && row[6] === today); // Adjust index if needed
+    const filteredData = attendanceData.filter(row => row[0] === empCode && row[7] === today);
     console.log("Filtered Data:", filteredData); // Debugging: Log filtered data
 
     if (filteredData.length > 0) {
@@ -236,6 +231,7 @@ const updateButtonStates = async empCode => {
     }
 };
 
+
 // Function to search employee code and update log status
 const searchEmpCode = async (empCode, callback) => {
     const data = await fetchDataFromGoogleSheets(RANGE);
@@ -247,9 +243,11 @@ const searchEmpCode = async (empCode, callback) => {
     const attendanceData = data.values || [];
     console.log("Fetched Data:", attendanceData); // Debugging statement
 
+    // Ensure the employee code is correctly compared (trimmed and case-insensitive)
     empCode = empCode.trim();
     console.log("Searching for empCode:", empCode);
 
+    // Filter the data by employee code with exact match
     const filteredData = attendanceData.filter(row => row[2].trim() === empCode); // Adjust column index as needed
     console.log("Filtered Data for empCode:", filteredData); // Debugging statement
 
@@ -259,13 +257,15 @@ const searchEmpCode = async (empCode, callback) => {
         return;
     }
 
+    // Function to parse date and time into a Date object
     const parseDateTime = dateTimeStr => {
         const [date, time] = dateTimeStr.split(' ');
-        const [day, month, year] = date.split('-').map(Number); // Ensure correct date format
-        const [hour, minute] = time.split(':').map(Number);
-        return new Date(year, month - 1, day, hour, minute);
+        const [day, month, year] = date.split('/').map(Number);
+        const [hour, minute, second] = time.split(':').map(Number);
+        return new Date(year, month - 1, day, hour, minute, second);
     };
 
+    // Sort filtered data by date and time to find the latest entry
     const sortedData = filteredData.sort((a, b) => {
         const dateTimeA = parseDateTime(a[0] + ' ' + a[1]); // Combine date and time
         const dateTimeB = parseDateTime(b[0] + ' ' + b[1]); // Combine date and time
@@ -276,19 +276,24 @@ const searchEmpCode = async (empCode, callback) => {
     console.log("Sorted Data:", sortedData); // Debugging statement
     console.log("Latest Entry for empCode:", latestLog); // Print the latest entry in the console
 
+    // Extract and print the latest log status
     const latestLogStatus = latestLog ? latestLog[8] : 'IN'; // Adjust index as needed
     console.log("Latest Log Status for empCode:", latestLogStatus); // Print the latest log status
 
+    // Determine the log status based on the latest entry
     const logStatus = latestLogStatus === 'IN' ? 'INOUT' : (latestLogStatus === 'INOUT' ? 'IN' : latestLogStatus);
 
+    // Update the logStatus input field
     document.getElementById("logStatus").value = logStatus;
 
     if (callback) {
         callback(filteredData);
     }
 
+    // Update button states based on latest log status
     await updateButtonStates(empCode);
 };
+
 
 // Function to post data to Google Sheets
 const postDataToGoogleSheets = async (values) => {
@@ -315,7 +320,6 @@ const postDataToGoogleSheets = async (values) => {
     }
 };
 
-// Handle Login button click
 const handleLoginClick = async () => {
     if (latestLogStatus === "IN") {
         alert("Already logged in.");
@@ -329,10 +333,11 @@ const handleLoginClick = async () => {
     const values = [empCode, '', '', '', '', '', formatDate(new Date()), logStatus, dateTime];
     await postDataToGoogleSheets(values);
 
+    // Update button states
     await updateButtonStates(empCode);
 };
 
-// Handle Logout button click
+
 const handleLogoutClick = async () => {
     if (latestLogStatus === "OUT") {
         alert("Already logged out.");
@@ -346,8 +351,10 @@ const handleLogoutClick = async () => {
     const values = [empCode, '', '', '', '', '', formatDate(new Date()), logStatus, dateTime];
     await postDataToGoogleSheets(values);
 
+    // Update button states
     await updateButtonStates(empCode);
 };
+
 
 // Attach event listeners to buttons
 document.getElementById("login").addEventListener("click", handleLoginClick);
