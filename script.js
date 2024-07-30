@@ -1,5 +1,5 @@
 // Constants
-const MAX_DISTANCE_KM = 10; // Approximately 100 meters
+const MAX_DISTANCE_KM = 10; // Distance in km for validation
 const SCAN_DELAY = 1000;
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA';
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E';
@@ -7,7 +7,7 @@ const RANGE = 'Attendance!A1:I';
 const empRange = 'EmployeeDetails!A1:C';
 
 let empCode = null;
-let latestLogStatus = null; // Added to store the latest log status
+let latestLogStatus = null; // To store the latest log status
 
 // Utility function to format date and time
 const formatDateTime = date => {
@@ -192,6 +192,7 @@ const searchEmpCodeMatch = async empCode => {
     return true;
 };
 
+// Function to update button states
 const updateButtonStates = async empCode => {
     const data = await fetchDataFromGoogleSheets(RANGE);
     if (!data) {
@@ -310,6 +311,7 @@ const postDataToGoogleSheets = async (values) => {
     }
 };
 
+// Handle Login button click
 const handleLoginClick = async () => {
     if (latestLogStatus === "IN") {
         alert("Already logged in.");
@@ -326,6 +328,7 @@ const handleLoginClick = async () => {
     await updateButtonStates(empCode);
 };
 
+// Handle Logout button click
 const handleLogoutClick = async () => {
     if (latestLogStatus === "OUT") {
         alert("Already logged out.");
