@@ -9,10 +9,18 @@ body {
     text-align: center;
     background: rgba(74, 99, 19, 0.66);
 }
+/* .container {
+    width: 100%;
+    max-width: 500px;
+    margin: 5px;
+} */
 .container {
     width: 100%;
     max-width: 500px;
     margin: 5px;
+    display: flex;
+    flex-direction: column;
+    /* min-height: 100vh; */
 }
 
 .container h1 {
