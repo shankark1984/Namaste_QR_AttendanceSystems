@@ -10,7 +10,7 @@
     <!-- Add the below meta tags for better compatibility -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    
+
     <style>
         table {
             width: 100%;
@@ -28,6 +28,18 @@
         #table-body td[rowspan] {
             vertical-align: middle;
             text-align: center;
+        }
+
+        /* Styles for disabled buttons */
+        .btn:disabled {
+            background-color: #e9ecef;
+            /* Light gray background */
+            color: #6c757d;
+            /* Disabled text color */
+            cursor: not-allowed;
+            /* Show not-allowed cursor */
+            opacity: 0.65;
+            /* Slightly transparent */
         }
     </style>
 </head>
@@ -116,7 +128,8 @@
                         </div>
                     </div>
                     <!-- Your existing buttons in HTML  id="login" disabled-->
-                    <button type="submit" class="btn btn-light text-primary w-100 py-3">LOGIN</button>
+                    <button type="submit" class="btn btn-light text-primary w-100 py-3" id="login"
+                        disabled>LOGIN</button>
                     <button type="submit" class="btn btn-light text-primary w-100 py-3" id="logout"
                         disabled>LOGOUT</button>
 

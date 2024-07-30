@@ -204,7 +204,7 @@ const updateButtonStates = async empCode => {
 
     // Filter the data by employee code and date
     const today = formatDate(new Date());
-    const filteredData = attendanceData.filter(row => row[2].trim() === empCode && row[6] === today); // Adjust index if needed
+    const filteredData = attendanceData.filter(row => row[0] === empCode && row[7] === today);
     console.log("Filtered Data:", filteredData); // Debugging: Log filtered data
 
     if (filteredData.length > 0) {
@@ -231,6 +231,7 @@ const updateButtonStates = async empCode => {
     }
 };
 
+
 // Function to search employee code and update log status
 const searchEmpCode = async (empCode, callback) => {
     const data = await fetchDataFromGoogleSheets(RANGE);
@@ -242,9 +243,11 @@ const searchEmpCode = async (empCode, callback) => {
     const attendanceData = data.values || [];
     console.log("Fetched Data:", attendanceData); // Debugging statement
 
+    // Ensure the employee code is correctly compared (trimmed and case-insensitive)
     empCode = empCode.trim();
     console.log("Searching for empCode:", empCode);
 
+    // Filter the data by employee code with exact match
     const filteredData = attendanceData.filter(row => row[2].trim() === empCode); // Adjust column index as needed
     console.log("Filtered Data for empCode:", filteredData); // Debugging statement
 
@@ -254,13 +257,15 @@ const searchEmpCode = async (empCode, callback) => {
         return;
     }
 
+    // Function to parse date and time into a Date object
     const parseDateTime = dateTimeStr => {
         const [date, time] = dateTimeStr.split(' ');
-        const [day, month, year] = date.split('-').map(Number); // Ensure correct date format
-        const [hour, minute] = time.split(':').map(Number);
-        return new Date(year, month - 1, day, hour, minute);
+        const [day, month, year] = date.split('/').map(Number);
+        const [hour, minute, second] = time.split(':').map(Number);
+        return new Date(year, month - 1, day, hour, minute, second);
     };
 
+    // Sort filtered data by date and time to find the latest entry
     const sortedData = filteredData.sort((a, b) => {
         const dateTimeA = parseDateTime(a[0] + ' ' + a[1]); // Combine date and time
         const dateTimeB = parseDateTime(b[0] + ' ' + b[1]); // Combine date and time
@@ -271,19 +276,24 @@ const searchEmpCode = async (empCode, callback) => {
     console.log("Sorted Data:", sortedData); // Debugging statement
     console.log("Latest Entry for empCode:", latestLog); // Print the latest entry in the console
 
+    // Extract and print the latest log status
     const latestLogStatus = latestLog ? latestLog[8] : 'IN'; // Adjust index as needed
     console.log("Latest Log Status for empCode:", latestLogStatus); // Print the latest log status
 
+    // Determine the log status based on the latest entry
     const logStatus = latestLogStatus === 'IN' ? 'INOUT' : (latestLogStatus === 'INOUT' ? 'IN' : latestLogStatus);
 
+    // Update the logStatus input field
     document.getElementById("logStatus").value = logStatus;
 
     if (callback) {
         callback(filteredData);
     }
 
+    // Update button states based on latest log status
     await updateButtonStates(empCode);
 };
+
 
 // Function to post data to Google Sheets
 const postDataToGoogleSheets = async (values) => {
@@ -323,8 +333,10 @@ const handleLoginClick = async () => {
     const values = [empCode, '', '', '', '', '', formatDate(new Date()), logStatus, dateTime];
     await postDataToGoogleSheets(values);
 
+    // Update button states
     await updateButtonStates(empCode);
 };
+
 
 const handleLogoutClick = async () => {
     if (latestLogStatus === "OUT") {
@@ -339,8 +351,10 @@ const handleLogoutClick = async () => {
     const values = [empCode, '', '', '', '', '', formatDate(new Date()), logStatus, dateTime];
     await postDataToGoogleSheets(values);
 
+    // Update button states
     await updateButtonStates(empCode);
 };
+
 
 // Attach event listeners to buttons
 document.getElementById("login").addEventListener("click", handleLoginClick);

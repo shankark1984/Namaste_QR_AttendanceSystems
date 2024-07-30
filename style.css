@@ -82,10 +82,10 @@ video {
     /* border: 2px solid #23b023; */
 }
 
-input,
+/* input,
 label {
     display: none;
-}
+} */
 
 .column {
     float: left;
