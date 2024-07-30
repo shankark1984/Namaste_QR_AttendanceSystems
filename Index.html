@@ -1,178 +1,29 @@
+<!-- Index.html file -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Namaste</title>
-    <link rel="manifest" href="/manifest.json">
-    <!-- Add the below meta tags for better compatibility -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid #000;
-            padding: 8px;
-            text-align: center;
-            /* Center align all content */
-        }
-
-        #table-body td[rowspan] {
-            vertical-align: middle;
-            text-align: center;
-        }
-
-        /* Styles for disabled buttons */
-        .btn:disabled {
-            background-color: #e9ecef;
-            /* Light gray background */
-            color: #6c757d;
-            /* Disabled text color */
-            cursor: not-allowed;
-            /* Show not-allowed cursor */
-            opacity: 0.65;
-            /* Slightly transparent */
-        }
-    </style>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="style.css">
+    <title>QR Code Scanner / Reader
+    </title>
 </head>
 
-<body onload="currentLocation()">
+<body>
     <div class="container">
+        <h1>Scan QR Codes</h1>
         <div class="section">
-            <img class="logo" src="img/Logo.png" alt="Namaste" width="50%">
-            <!-- Display empCode above camera view -->
-            <div>
-                <p id="empNameDisplay" class="emp-code-display"></p>
-                <p id="siteCodeDisplay" class="emp-code-display"></p>
+            <div id="my-qr-reader">
             </div>
-
-            <div id="my-qr-reader"></div>
-            <div class="container">
-                <form class="gform pure-form pure-form-stacked" method="POST" data-email="example@email.net"
-                    action="https://script.google.com/macros/s/AKfycbwU_J6Z7aR_Sk5AowsTg9JN7FeZmjicubZSm39LpSDC5CyFnVfEQEoFS4KuVC85fWcBTA/exec">
-                    <div>
-                        <div>
-                            <label for="empCode">Emp Code</label>
-                            <input type="text" id="empCode" name="empCode" placeholder="Emp Code">
-                        </div>
-                        <div>
-                            <label for="empName">Emp Name</label>
-                            <input type="text" id="empName" name="empName" placeholder="Emp Name">
-                        </div>
-                        <div>
-                            <label for="siteID">Site ID</label>
-                            <input type="text" id="siteID" name="siteID" placeholder="Site ID">
-                        </div>
-                        <div>
-                            <label for="workOrderNo">Work Order No</label>
-                            <input type="text" id="workOrderNo" name="workOrderNo" placeholder="Work Order No">
-                        </div>
-                        <div>
-                            <label for="indatetime">In Date & Time</label>
-                            <input type="text" id="indatetime" name="indatetime" placeholder="In Date & Time">
-                        </div>
-                        <div>
-                            <label for="outdatetime">Out Date & Time</label>
-                            <input type="text" id="outdatetime" name="outdatetime" placeholder="Out Date & Time">
-                        </div>
-                        <div>
-                            <label for="incurrentLatitude">In Current Latitude</label>
-                            <input type="text" id="incurrentLatitude" name="incurrentLatitude"
-                                placeholder="In Current Latitude">
-                        </div>
-                        <div>
-                            <label for="incurrentLongitude">In Current Longitude</label>
-                            <input type="text" id="incurrentLongitude" name="incurrentLongitude"
-                                placeholder="In Current Longitude">
-                        </div>
-                        <div>
-                            <label for="outcurrentLatitude">Out Current Latitude</label>
-                            <input type="text" id="outcurrentLatitude" name="outcurrentLatitude"
-                                placeholder="Out Current Latitude">
-                        </div>
-                        <div>
-                            <label for="outcurrentLongitude">Out Current Longitude</label>
-                            <input type="text" id="outcurrentLongitude" name="outcurrentLongitude"
-                                placeholder="Out Current Longitude">
-                        </div>
-                        <div>
-                            <label for="insiteLatitude">In Site Latitude</label>
-                            <input type="text" id="insiteLatitude" name="insiteLatitude" placeholder="In Site Latitude">
-                        </div>
-                        <div>
-                            <label for="insiteLongitude">In Site Longitude</label>
-                            <input type="text" id="insiteLongitude" name="insiteLongitude"
-                                placeholder="In Site Longitude">
-                        </div>
-                        <div>
-                            <label for="outsiteLatitude">Out Site Latitude</label>
-                            <input type="text" id="outsiteLatitude" name="outsiteLatitude"
-                                placeholder="Out Site Latitude">
-                        </div>
-                        <div>
-                            <label for="outsiteLongitude">Out Site Longitude</label>
-                            <input type="text" id="outsiteLongitude" name="outsiteLongitude"
-                                placeholder="Out Site Longitude">
-                        </div>
-                        <div>
-                            <label for="logStatus">Log Status</label>
-                            <input type="text" id="logStatus" name="logStatus" placeholder="Log Status">
-                        </div>
-                    </div>
-                    <!-- Your existing buttons in HTML  id="login" disabled-->
-                    <button type="submit" class="btn btn-light text-primary w-100 py-3" id="login"
-                        disabled>LOGIN</button>
-                    <button type="submit" class="btn btn-light text-primary w-100 py-3" id="logout"
-                        disabled>LOGOUT</button>
-
-                </form>
-            </div>
-            <div id="logStatus"></div>
-            <span class="text-white"><i></i><b>AllEdge Soft & Logic (OPC) Pvt. Ltd.</b>, All rights reserved.</span>
-
-            <p id="demo"></p>
         </div>
-        <p id="dataAttandence"></p>
-        <table id="data-table">
-            <thead>
-                <tr id="table-header"></tr>
-            </thead>
-            <tbody id="table-body"></tbody>
-        </table>
-
     </div>
-
-    <script src="qrcodescanner.js"></script>
-    <script src="script.js"></script>
-    <script data-cfasync="false" src="form-submission-handler.js"></script>
-
-    <script>
-        const y = document.getElementById("demo");
-
-        function currentLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showCurrentPosition);
-            } else {
-                y.innerHTML = "Geolocation is not supported by this browser.";
-            }
-        }
-
-        function showCurrentPosition(position) {
-            y.innerHTML = "Latitude: " + position.coords.latitude +
-                " - Longitude: " + position.coords.longitude;
-        }
+    <script
+        src="https://unpkg.com/html5-qrcode">
     </script>
-
-
-
+    <script src="script.js"></script>
 </body>
 
 </html>
