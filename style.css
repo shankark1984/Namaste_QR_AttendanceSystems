@@ -1,22 +1,18 @@
-/* Existing styles */
+/* style.css file*/
 body {
     display: flex;
     justify-content: center;
     margin: 0;
     padding: 0;
-    height: 200vh;
+    height: 100vh;
     box-sizing: border-box;
     text-align: center;
-    background: rgba(74, 99, 19, 0.66);
+    background: rgb(128 0 0 / 66%);
 }
-
 .container {
     width: 100%;
     max-width: 500px;
     margin: 5px;
-    display: flex;
-    flex-direction: column;
-    /* min-height: 100vh; */
 }
 
 .container h1 {
@@ -24,12 +20,11 @@ body {
 }
 
 .section {
-    background-color: #b68b63;
-    padding: 10px 50px;
+    background-color: #ffffff;
+    padding: 50px 30px;
     border: 1.5px solid #b2b2b2;
     border-radius: 0.25em;
     box-shadow: 0 20px 25px rgba(0, 0, 0, 0.25);
-    flex: 1;
 }
 
 #my-qr-reader {
@@ -67,81 +62,11 @@ button:hover {
 
 #html5-qrcode-anchor-scan-type-change {
     text-decoration: none !important;
-    color: #0010bc;
-    font-weight: bold;
+    color: #1d9bf0;
 }
 
 video {
     width: 100% !important;
     border: 1px solid #b2b2b2 !important;
     border-radius: 0.25em;
-}
-
-.logo {
-    padding: 5px;
-    /* border: 2px solid #23b023; */
-}
-
-input,
-label {
-    display: none;
-}
-
-.column {
-    float: left;
-    width: 50%;
-    padding: 10px;
-    height: 300px;
-    /* Should be removed. Only for demonstration */
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table,
-th,
-td {
-    border: 1px solid black;
-}
-
-th,
-td {
-    padding: 8px;
-    text-align: center;
-    font-size: small;
-}
-
-/* New styles */
-html,
-body {
-    height: 100%;
-    margin: 0;
-}
-
-.emp-code-container {
-    display: flex;
-    justify-content: center;
-    /* Aligns items horizontally to the center */
-    gap: 10px;
-    /* Optional: Adds space between the items */
-}
-
-.emp-code-display {
-    margin: 0;
-    /* Remove default margin */
-}
-
-.homebody {
-
-    display: flex;
-    justify-content: center;
-    margin: 0;
-    padding: 0;
-    height: auto;
-    width: auto;
-    box-sizing: border-box;
-    text-align: center;
-    background: rgba(74, 99, 19, 0.66);
 }
