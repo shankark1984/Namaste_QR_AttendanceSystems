@@ -16,7 +16,7 @@ const formatDateTime = date => {
 };
 
 // DOM Ready function
-const domReady = fn => {
+function domReady (fn) {
     if (document.readyState === "complete" || document.readyState === "interactive") {
         setTimeout(fn, SCAN_DELAY);
     } else {
@@ -68,7 +68,7 @@ const onScanSuccess = async (decodeText, decodeResult) => {
 };
 
 // Initialize QR code scanner
-domReady(() => {
+domReady(function () {
     let htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
     htmlscanner.render(onScanSuccess);
 });
