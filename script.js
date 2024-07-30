@@ -4,7 +4,7 @@ const SCAN_DELAY = 1000;
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA';
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E';
 const RANGE = 'Attendance!A1:I';
-const empRange = 'EmployeeDetails!A1:C';
+const EMP_RANGE = 'EmployeeDetails!A1:C';
 
 let empCode = null;
 let latestLogStatus = null; // To store the latest log status
@@ -25,7 +25,7 @@ const domReady = fn => {
 };
 
 // Function to handle QR code scan success
-const onScanSuccess = async (decodeText, decodeResult) => {
+const onScanSuccess = async (decodeText) => {
     const splits = decodeText.split(",");
     console.log("Decoded QR code data:", splits);
 
@@ -70,14 +70,15 @@ const onScanSuccess = async (decodeText, decodeResult) => {
 // Initialize QR code scanner
 domReady(() => {
     try {
-    const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
-    htmlscanner.render(onScanSuccess);
-} catch (error) {
-    console.error("Error initializing QR code scanner:", error);
-}
+        const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
+        htmlscanner.render(onScanSuccess);
+    } catch (error) {
+        console.error("Error initializing QR code scanner:", error);
+    }
 });
 
 const stopScanner = () => {
+    const htmlscanner = Html5QrcodeScanner.getInstance(); // Ensure you have the right method to get the instance
     if (htmlscanner) {
         htmlscanner.clear(); // Or the method to stop scanning
     }
@@ -147,20 +148,13 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 
 // Function to show error message
 const showError = error => {
-    switch (error.code) {
-        case error.PERMISSION_DENIED:
-            alert("User denied the request for Geolocation.");
-            break;
-        case error.POSITION_UNAVAILABLE:
-            alert("Location information is unavailable.");
-            break;
-        case error.TIMEOUT:
-            alert("The request to get user location timed out.");
-            break;
-        case error.UNKNOWN_ERROR:
-            alert("An unknown error occurred.");
-            break;
-    }
+    const errorMessages = {
+        1: "User denied the request for Geolocation.",
+        2: "Location information is unavailable.",
+        3: "The request to get user location timed out.",
+        0: "An unknown error occurred."
+    };
+    alert(errorMessages[error.code]);
 };
 
 // Function to fetch data from Google Sheets
@@ -179,7 +173,7 @@ const fetchDataFromGoogleSheets = async range => {
 
 // Function to search employee code
 const searchEmpCodeMatch = async empCode => {
-    const data = await fetchDataFromGoogleSheets(empRange);
+    const data = await fetchDataFromGoogleSheets(EMP_RANGE);
     if (!data) {
         alert("Failed to fetch data from Google Sheets");
         return false;
