@@ -350,12 +350,12 @@ document.getElementById("logout").addEventListener("click", handleLogoutClick);
 const formatDate = date => date.toISOString().split('T')[0];
 
 // Service Worker registration
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js').then(registration => {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, err => {
-            console.log('ServiceWorker registration failed: ', err);
-        });
-    });
-}
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', () => {
+//         navigator.serviceWorker.register('/service-worker.js').then(registration => {
+//             console.log('ServiceWorker registration successful with scope: ', registration.scope);
+//         }, err => {
+//             console.log('ServiceWorker registration failed: ', err);
+//         });
+//     });
+// }
