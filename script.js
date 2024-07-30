@@ -1,5 +1,5 @@
 // Constants
-const MAX_DISTANCE_KM = 10; // Approximately 100 meters
+const MAX_DISTANCE_KM = 1; // Approximately 100 meters
 const SCAN_DELAY = 1000;
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA';
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E';
@@ -16,7 +16,7 @@ const formatDateTime = date => {
 };
 
 // DOM Ready function
-function domReady (fn) {
+const domReady = fn => {
     if (document.readyState === "complete" || document.readyState === "interactive") {
         setTimeout(fn, SCAN_DELAY);
     } else {
@@ -51,6 +51,7 @@ const onScanSuccess = async (decodeText, decodeResult) => {
             return;
         }
         await searchEmpCode(empCode, async (filteredData) => {
+            populateTable(filteredData); // Populate table with filtered data
             await updateButtonStates(empCode);
         });
 
@@ -68,8 +69,8 @@ const onScanSuccess = async (decodeText, decodeResult) => {
 };
 
 // Initialize QR code scanner
-domReady(function () {
-    let htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
+domReady(() => {
+    const htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
     htmlscanner.render(onScanSuccess);
 });
 
@@ -192,45 +193,52 @@ const searchEmpCodeMatch = async empCode => {
     return true;
 };
 
-const updateButtonStates = async empCode => {
-    const data = await fetchDataFromGoogleSheets(RANGE);
-    if (!data) {
-        alert("Failed to fetch data from Google Sheets");
-        return;
-    }
+// Function to handle form submission and update button states
+const updateButtonStates = empCode => {
+    const loginButton = document.getElementById('login');
+    const logoutButton = document.getElementById('logout');
+    
+    // Clear existing button states
+    loginButton.disabled = true;
+    logoutButton.disabled = true;
 
-    const attendanceData = data.values || [];
-    console.log("Attendance Data:", attendanceData); // Debugging: Log raw data
+    console.log("Updating button states with latestLogStatus:", latestLogStatus);
 
-    // Filter the data by employee code and date
-    const today = formatDate(new Date());
-    const filteredData = attendanceData.filter(row => row[0] === empCode && row[7] === today);
-    console.log("Filtered Data:", filteredData); // Debugging: Log filtered data
-
-    if (filteredData.length > 0) {
-        const lastLogStatus = filteredData[filteredData.length - 1][8]; // Adjust index if needed
-        console.log("Last Log Status:", lastLogStatus); // Debugging: Log last log status
-
-        latestLogStatus = lastLogStatus; // Update the latest log status
-
-        // Update button states based on the latest log status
-        if (latestLogStatus === "IN") {
-            document.getElementById("login").disabled = true;
-            document.getElementById("logout").disabled = false;
-        } else if (latestLogStatus === "INOUT") {
-            document.getElementById("login").disabled = false;
-            document.getElementById("logout").disabled = true;
-        } else {
-            document.getElementById("login").disabled = false;
-            document.getElementById("logout").disabled = false;
-        }
-    } else {
-        // If no data found for the employee, enable both buttons
-        document.getElementById("login").disabled = false;
-        document.getElementById("logout").disabled = false;
+    // Determine button states based on latestLogStatus
+    if (latestLogStatus === 'IN') {
+        logoutButton.disabled = false;
+        console.log("Logout button enabled.");
+    } else if (latestLogStatus === 'INOUT') {
+        loginButton.disabled = false;
+        console.log("Login button enabled.");
     }
 };
 
+// Function to fetch and process attendance data
+const fetchAttendanceData = async empCode => {
+    const data = await fetchDataFromGoogleSheets(RANGE);
+    if (!data) {
+        alert("Failed to fetch data from Google Sheets");
+        return [];
+    }
+
+    const attendanceData = data.values || [];
+    const todayDate = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+
+    const filteredData = attendanceData.filter(row => {
+        const rowDate = row[0].split(' ')[0];
+        const rowEmpCode = row[2];
+        return rowDate === todayDate && rowEmpCode === empCode;
+    });
+
+    console.log("Filtered Data:", filteredData);
+
+    if (filteredData.length === 0) {
+        document.getElementById("logStatus").value = 'IN';
+    }
+
+    return filteredData;
+};
 
 // Function to search employee code and update log status
 const searchEmpCode = async (empCode, callback) => {
@@ -243,7 +251,6 @@ const searchEmpCode = async (empCode, callback) => {
     const attendanceData = data.values || [];
     console.log("Fetched Data:", attendanceData); // Debugging statement
 
-    // Ensure the employee code is correctly compared (trimmed and case-insensitive)
     empCode = empCode.trim();
     console.log("Searching for empCode:", empCode);
 
@@ -277,7 +284,7 @@ const searchEmpCode = async (empCode, callback) => {
     console.log("Latest Entry for empCode:", latestLog); // Print the latest entry in the console
 
     // Extract and print the latest log status
-    const latestLogStatus = latestLog ? latestLog[8] : 'IN'; // Adjust index as needed
+    latestLogStatus = latestLog ? latestLog[8] : 'IN'; // Adjust index as needed
     console.log("Latest Log Status for empCode:", latestLogStatus); // Print the latest log status
 
     // Determine the log status based on the latest entry
@@ -291,78 +298,121 @@ const searchEmpCode = async (empCode, callback) => {
     }
 
     // Update button states based on latest log status
-    await updateButtonStates(empCode);
+    updateButtonStates(empCode);
 };
 
+const populateTable = (data) => {
+    const tableBody = document.getElementById('table-body');
+    tableBody.innerHTML = '';
 
-// Function to post data to Google Sheets
-const postDataToGoogleSheets = async (values) => {
-    try {
-        const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}:append?valueInputOption=RAW&insertDataOption=INSERT_DATA_OPTION_OVERWRITE&key=${API_KEY}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                range: RANGE,
-                majorDimension: 'ROWS',
-                values: [values]
-            })
-        });
+    if (data.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6">No data available</td></tr>';
+        return;
+    }
 
-        if (!response.ok) {
-            throw new Error("Failed to post data to Google Sheets");
+    const dateWorkingHoursMap = {};
+
+    data.forEach(row => {
+        const [inDate, inTime] = (row[4] || '').split(' ');
+        const [outDate, outTime] = (row[5] || '').split(' ');
+
+        // Calculate working hours
+        const workingHours = calculateWorkingHours(inDate, inTime, outDate, outTime);
+
+        // Aggregate working hours for each date
+        if (inDate) {
+            if (!dateWorkingHoursMap[inDate]) {
+                dateWorkingHoursMap[inDate] = {
+                    totalWorkingHours: 0,
+                    rows: []
+                };
+            }
+            dateWorkingHoursMap[inDate].totalWorkingHours += parseHours(workingHours);
+            dateWorkingHoursMap[inDate].rows.push({ inDate, inTime, outDate, outTime, workingHours });
         }
+    });
 
-        console.log("Data posted to Google Sheets successfully.");
+    for (const inDate in dateWorkingHoursMap) {
+        const { totalWorkingHours, rows } = dateWorkingHoursMap[inDate];
+        rows.forEach((row, index) => {
+            const tr = document.createElement('tr');
+            
+            // Create table cells
+            const cells = [
+                row.inDate || '-',   // In Date
+                row.inTime || '-',   // In Time
+                row.outDate || '-',  // Out Date
+                row.outTime || '-',  // Out Time
+                row.workingHours || '-',  // Working Hours
+                index === 0 ? formatHours(totalWorkingHours) : '' // Total Working Hours for the day
+            ];
+
+            cells.forEach((cell, cellIndex) => {
+                const td = document.createElement('td');
+                td.textContent = cell;
+
+                // Apply rowspan for the Total Working Hours cell
+                if (cellIndex === 5 && index === 0) {
+                    td.setAttribute('rowspan', rows.length);
+                }
+                
+                // Remove border on merged cells
+                if (cellIndex === 5 && index > 0) {
+                    td.style.borderTop = 'none';
+                }
+
+                tr.appendChild(td);
+            });
+
+            tableBody.appendChild(tr);
+        });
+    }
+};
+
+// Function to calculate working hours in Hours:Minutes format
+const calculateWorkingHours = (inDate, inTime, outDate, outTime) => {
+    if (!inDate || !inTime || !outDate || !outTime) {
+        return '-';
+    }
+
+    try {
+        // Combine date and time strings
+        const inDateTimeStr = `${inDate} ${inTime}`;
+        const outDateTimeStr = `${outDate} ${outTime}`;
+
+        // Convert to Date objects
+        const inDateTime = new Date(inDateTimeStr.split('-').reverse().join('-')); // Convert to YYYY-MM-DD
+        const outDateTime = new Date(outDateTimeStr.split('-').reverse().join('-')); // Convert to YYYY-MM-DD
+
+        // Calculate time difference in milliseconds
+        const timeDiffMs = outDateTime - inDateTime;
+
+        // Convert milliseconds to hours and minutes
+        const totalMinutes = Math.floor(timeDiffMs / (1000 * 60));
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+
+        // Format hours and minutes
+        return `${hours}:${minutes.toString().padStart(2, '0')}`;
     } catch (error) {
-        console.error(error);
+        console.error("Error calculating working hours:", error);
+        return '-';
     }
 };
 
-const handleLoginClick = async () => {
-    if (latestLogStatus === "IN") {
-        alert("Already logged in.");
-        return;
-    }
-
-    const logStatus = 'IN';
-    const empCode = document.getElementById("empCode").value;
-    const dateTime = formatDateTime(new Date());
-
-    const values = [empCode, '', '', '', '', '', formatDate(new Date()), logStatus, dateTime];
-    await postDataToGoogleSheets(values);
-
-    // Update button states
-    await updateButtonStates(empCode);
+// Function to parse hours from "Hours:Minutes" format
+const parseHours = (workingHours) => {
+    if (workingHours === '-' || !workingHours) return 0;
+    const [hours, minutes] = workingHours.split(':').map(Number);
+    return hours * 60 + minutes;
 };
 
-
-const handleLogoutClick = async () => {
-    if (latestLogStatus === "OUT") {
-        alert("Already logged out.");
-        return;
-    }
-
-    const logStatus = 'OUT';
-    const empCode = document.getElementById("empCode").value;
-    const dateTime = formatDateTime(new Date());
-
-    const values = [empCode, '', '', '', '', '', formatDate(new Date()), logStatus, dateTime];
-    await postDataToGoogleSheets(values);
-
-    // Update button states
-    await updateButtonStates(empCode);
+// Function to format total hours in "Hours:Minutes" format
+const formatHours = (totalMinutes) => {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours}:${minutes.toString().padStart(2, '0')}`;
 };
-
-
-// Attach event listeners to buttons
-document.getElementById("login").addEventListener("click", handleLoginClick);
-document.getElementById("logout").addEventListener("click", handleLogoutClick);
-
-// Format the date
-const formatDate = date => date.toISOString().split('T')[0];
-
 // Service Worker registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

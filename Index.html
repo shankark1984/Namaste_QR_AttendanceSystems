@@ -12,22 +12,40 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <style>
-        table {
-            width: 100%;
+        /* Style the table */
+        #data-table {
             border-collapse: collapse;
+            /* Ensures that borders between cells merge */
+            width: 100%;
+
         }
 
-        th,
-        td {
-            border: 1px solid #000;
+        /* Style table headers */
+        #table-header th {
+            background-color: #f4f4f4;
+            /* Light gray background for headers */
+
             padding: 8px;
-            text-align: center;
-            /* Center align all content */
+            text-align: left;
         }
 
-        #table-body td[rowspan] {
-            vertical-align: middle;
-            text-align: center;
+        /* Style table cells */
+        #table-body td {
+
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Optional: Add a border to the bottom of the table for better visibility */
+        #data-table {
+            border-bottom: 2px solid #333;
+            /* Darker border at the bottom of the table */
+        }
+
+        /* Optional: Add a border to the top of the table for better visibility */
+        #data-table {
+            border-top: 2px solid #333;
+            /* Darker border at the top of the table */
         }
 
         /* Styles for disabled buttons */
@@ -141,12 +159,19 @@
             <p id="demo"></p>
         </div>
         <p id="dataAttandence"></p>
-        <table id="data-table">
-            <thead>
-                <tr id="table-header"></tr>
-            </thead>
-            <tbody id="table-body"></tbody>
-        </table>
+            <table id="data-table">
+                <thead>
+                    <tr id="table-header">
+                        <th>In Date</th>
+                        <th>In Time</th>
+                        <th>Out Date</th>
+                        <th>Out Time</th>
+                        <th>Working Hours</th>
+                        <th>Total Working Hours for the day</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
 
     </div>
 
