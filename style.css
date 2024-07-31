@@ -116,7 +116,7 @@ table {
 table,
 th,
 td {
-    border: 1px solid  #c6c324;
+    border: 1.5px solid #b2b2b2;
     
 }
 
@@ -125,7 +125,6 @@ td {
     padding: 8px;
     text-align: center;
     font-size: small;
-    
 }
 
 /* Data table styling */
@@ -133,10 +132,7 @@ td {
     border-collapse: collapse;
     /* Ensures that borders between cells merge */
     width: 100%;
-    border-top: 2px solid #333;
-    /* Darker border at the top of the table */
-    border-bottom: 2px solid #333;
-    /* Darker border at the bottom of the table */
+    border: 1.5px solid #b2b2b2;
 }
 
 #table-header th {
