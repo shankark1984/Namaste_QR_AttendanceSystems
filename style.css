@@ -124,9 +124,8 @@ th,
 td {
     padding: 8px;
     text-align: center;
-    font-size: small;
+    font-size: 10px;
 }
-
 /* Data table styling */
 #data-table {
     border-collapse: collapse;
@@ -134,7 +133,6 @@ td {
     width: 100%;
     border: 1.5px solid #b2b2b2;
 }
-
 #table-header th {
     /* background-color:rgba(141, 180, 226, 1); */
     /* Light gray background for headers */
@@ -147,7 +145,6 @@ td {
     padding: 8px;
     text-align: left;
 }
-
 /* Styles for disabled buttons */
 .btn:disabled {
     background-color: #e9ecef;
