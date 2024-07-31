@@ -8,7 +8,7 @@ body {
     height: 100%;
     box-sizing: border-box;
     text-align: center;
-    background: rgba(74, 99, 19, 0.66);
+    background: rgba(15, 36, 62, 1);
 }
 
 /* Container styling */
@@ -26,7 +26,7 @@ body {
 
 /* Section styling */
 .section {
-    background-color: #bb9090;
+    background-color: rgba(241, 254, 114, 1);
     padding: 50px 30px;
     border: 1.5px solid #b2b2b2;
     border-radius: 0.25em;
@@ -97,19 +97,23 @@ label {
     float: left;
     width: 50%;
     padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
+    height: 300px;
+    /* Should be removed. Only for demonstration */
 }
 
 /* Table styling */
 table {
     width: 100%;
     border-collapse: collapse;
+    color: white;
+    
 }
 
 table,
 th,
 td {
     border: 1px solid black;
+    
 }
 
 th,
@@ -117,20 +121,26 @@ td {
     padding: 8px;
     text-align: center;
     font-size: small;
+    
 }
 
 /* Data table styling */
 #data-table {
-    border-collapse: collapse; /* Ensures that borders between cells merge */
+    border-collapse: collapse;
+    /* Ensures that borders between cells merge */
     width: 100%;
-    border-top: 2px solid #333; /* Darker border at the top of the table */
-    border-bottom: 2px solid #333; /* Darker border at the bottom of the table */
+    border-top: 2px solid #333;
+    /* Darker border at the top of the table */
+    border-bottom: 2px solid #333;
+    /* Darker border at the bottom of the table */
 }
 
 #table-header th {
-    background-color: #f4f4f4; /* Light gray background for headers */
+    background-color: #5f5353;
+    /* Light gray background for headers */
     padding: 8px;
     text-align: left;
+    text-align: center;
 }
 
 #table-body td {
@@ -140,21 +150,27 @@ td {
 
 /* Styles for disabled buttons */
 .btn:disabled {
-    background-color: #e9ecef; /* Light gray background */
-    color: #6c757d; /* Disabled text color */
-    cursor: not-allowed; /* Show not-allowed cursor */
-    opacity: 0.65; /* Slightly transparent */
+    background-color: #e9ecef;
+    /* Light gray background */
+    color: #6c757d;
+    /* Disabled text color */
+    cursor: not-allowed;
+    /* Show not-allowed cursor */
+    opacity: 0.65;
+    /* Slightly transparent */
 }
 
 /* New styles for employee code container */
 .emp-code-container {
     display: flex;
     justify-content: center;
-    gap: 10px; /* Optional: Adds space between the items */
+    gap: 10px;
+    /* Optional: Adds space between the items */
 }
 
 .emp-code-display {
-    margin: 0; /* Remove default margin */
+    margin: 0;
+    /* Remove default margin */
 }
 
 /* Homebody styling */
