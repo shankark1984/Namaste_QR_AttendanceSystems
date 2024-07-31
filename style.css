@@ -136,7 +136,7 @@ td {
 }
 
 #table-header th {
-    background-color: #5f5353;
+    background-color:rgba(141, 180, 226, 1);
     /* Light gray background for headers */
     padding: 8px;
     text-align: left;
