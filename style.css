@@ -84,6 +84,8 @@ video {
 /* Logo styling */
 .logo {
     padding: 5px;
+    border: 1px solid white !important;
+    background-color: #ffffff;
 }
 
 /* Input and label styling */
