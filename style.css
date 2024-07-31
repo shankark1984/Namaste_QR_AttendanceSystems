@@ -84,8 +84,9 @@ video {
 /* Logo styling */
 .logo {
     padding: 5px;
-    border: 1px solid white !important;
-    background-color: #ffffff;
+    /* border: 1px solid white !important; */
+    background-color: #c6c324;
+    border-radius: 25px;
 }
 
 /* Input and label styling */
@@ -114,7 +115,7 @@ table {
 table,
 th,
 td {
-    border: 1px solid black;
+    border: 1px solid  #c6c324;
     
 }
 
@@ -138,7 +139,7 @@ td {
 }
 
 #table-header th {
-    background-color:rgba(141, 180, 226, 1);
+    /* background-color:rgba(141, 180, 226, 1); */
     /* Light gray background for headers */
     padding: 8px;
     text-align: left;
