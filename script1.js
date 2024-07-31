@@ -1,5 +1,5 @@
 // Constants
-const MAX_DISTANCE_KM = 10; // Approximately 100 meters
+const MAX_DISTANCE_KM = 1; // Approximately 100 meters
 const SCAN_DELAY = 1000;
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA';
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E';
@@ -65,6 +65,8 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         document.getElementById("indatetime").value = formatDateTime(new Date());
         document.getElementById("outdatetime").value = formatDateTime(new Date());
         console.log("Employee Code:", splits[1], "Employee Name:", splits[2]);
+        document.getElementById("dataAttandence").textContent="Current Month Attandence Details";
+        
     }
 };
 
@@ -197,7 +199,7 @@ const searchEmpCodeMatch = async empCode => {
 const updateButtonStates = empCode => {
     const loginButton = document.getElementById('login');
     const logoutButton = document.getElementById('logout');
-    
+
     // Clear existing button states
     loginButton.disabled = true;
     logoutButton.disabled = true;
@@ -239,8 +241,6 @@ const fetchAttendanceData = async empCode => {
 
     return filteredData;
 };
-
-
 
 // Function to search employee code and update log status
 const searchEmpCode = async (empCode, callback) => {
@@ -303,21 +303,9 @@ const searchEmpCode = async (empCode, callback) => {
     updateButtonStates(empCode);
 };
 
-
 const populateTable = (data) => {
-    const tableHeader = document.getElementById('table-header');
     const tableBody = document.getElementById('table-body');
     tableBody.innerHTML = '';
-
-    // Define table headers correctly
-    tableHeader.innerHTML = `
-        <th>In Date</th>
-        <th>In Time</th>
-        <th>Out Date</th>
-        <th>Out Time</th>
-        <th>Working Hours</th>
-        <th>Total Working Hours for the Day</th>
-    `;
 
     if (data.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="6">No data available</td></tr>';
@@ -346,14 +334,11 @@ const populateTable = (data) => {
         }
     });
 
-    // Clear previous rows before adding new rows
-    tableBody.innerHTML = '';
-
     for (const inDate in dateWorkingHoursMap) {
         const { totalWorkingHours, rows } = dateWorkingHoursMap[inDate];
         rows.forEach((row, index) => {
             const tr = document.createElement('tr');
-            
+
             // Create table cells
             const cells = [
                 row.inDate || '-',   // In Date
@@ -371,12 +356,13 @@ const populateTable = (data) => {
                 // Apply rowspan for the Total Working Hours cell
                 if (cellIndex === 5 && index === 0) {
                     td.setAttribute('rowspan', rows.length);
-                } else if (cellIndex === 5 && index > 0) {
-                    // Hide cells in rows with rowspan
-                    td.style.display = 'none';
                 }
 
-                // Append cell to row
+                // Remove border on merged cells
+                if (cellIndex === 5 && index > 0) {
+                    td.style.borderTop = 'none';
+                }
+
                 tr.appendChild(td);
             });
 
@@ -385,26 +371,35 @@ const populateTable = (data) => {
     }
 };
 
-// Function to calculate working hours between in and out times
+// Function to calculate working hours in Hours:Minutes format
 const calculateWorkingHours = (inDate, inTime, outDate, outTime) => {
     if (!inDate || !inTime || !outDate || !outTime) {
-        return '-'; // Return '-' if any of the date/time values are missing
+        return '-';
     }
 
-    const inDateTime = new Date(`${inDate.split('-').reverse().join('-')}T${inTime}`);
-    const outDateTime = new Date(`${outDate.split('-').reverse().join('-')}T${outTime}`);
+    try {
+        // Combine date and time strings
+        const inDateTimeStr = `${inDate} ${inTime}`;
+        const outDateTimeStr = `${outDate} ${outTime}`;
 
-    if (isNaN(inDateTime) || isNaN(outDateTime) || inDateTime > outDateTime) {
-        return '-'; // Return '-' if date/time is invalid or inDateTime is after outDateTime
+        // Convert to Date objects
+        const inDateTime = new Date(inDateTimeStr.split('-').reverse().join('-')); // Convert to YYYY-MM-DD
+        const outDateTime = new Date(outDateTimeStr.split('-').reverse().join('-')); // Convert to YYYY-MM-DD
+
+        // Calculate time difference in milliseconds
+        const timeDiffMs = outDateTime - inDateTime;
+
+        // Convert milliseconds to hours and minutes
+        const totalMinutes = Math.floor(timeDiffMs / (1000 * 60));
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+
+        // Format hours and minutes
+        return `${hours}:${minutes.toString().padStart(2, '0')}`;
+    } catch (error) {
+        console.error("Error calculating working hours:", error);
+        return '-';
     }
-
-    const diffMs = outDateTime - inDateTime;
-    const totalMinutes = Math.floor(diffMs / (1000 * 60));
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    // Format as "HH:MM"
-    return `${hours}:${minutes.toString().padStart(2, '0')}`;
 };
 
 // Function to parse hours from "Hours:Minutes" format
@@ -420,3 +415,13 @@ const formatHours = (totalMinutes) => {
     const minutes = totalMinutes % 60;
     return `${hours}:${minutes.toString().padStart(2, '0')}`;
 };
+// Service Worker registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, err => {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    });
+}
