@@ -27,7 +27,7 @@ body {
 /* Section styling */
 .section {
     background-color: rgba(15, 36, 62, 1); /*rgba(241, 254, 114, 1);*/
-    padding: 50px 30px;
+    padding: 20px 30px;
     border: 1.5px solid #b2b2b2;
     border-radius: 0.25em;
     box-shadow: 0 20px 25px rgba(0, 0, 0, 0.25);
@@ -71,7 +71,7 @@ button:hover {
 /* QR code anchor styling */
 #html5-qrcode-anchor-scan-type-change {
     text-decoration: none !important;
-    color: #1d9bf0;
+    color: rgba(141, 180, 226, 1);
 }
 
 /* Video styling */
@@ -87,6 +87,7 @@ video {
     /* border: 1px solid white !important; */
     background-color: #c6c324;
     border-radius: 25px;
+    padding: 10px;
 }
 
 /* Input and label styling */
