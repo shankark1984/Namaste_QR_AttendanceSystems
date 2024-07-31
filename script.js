@@ -65,6 +65,8 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         document.getElementById("indatetime").value = formatDateTime(new Date());
         document.getElementById("outdatetime").value = formatDateTime(new Date());
         console.log("Employee Code:", splits[1], "Employee Name:", splits[2]);
+        document.getElementById("dataAttandence").textContent="Current Month Attandence Details";
+        
     }
 };
 
@@ -197,7 +199,7 @@ const searchEmpCodeMatch = async empCode => {
 const updateButtonStates = empCode => {
     const loginButton = document.getElementById('login');
     const logoutButton = document.getElementById('logout');
-    
+
     // Clear existing button states
     loginButton.disabled = true;
     logoutButton.disabled = true;
@@ -336,7 +338,7 @@ const populateTable = (data) => {
         const { totalWorkingHours, rows } = dateWorkingHoursMap[inDate];
         rows.forEach((row, index) => {
             const tr = document.createElement('tr');
-            
+
             // Create table cells
             const cells = [
                 row.inDate || '-',   // In Date
@@ -355,7 +357,7 @@ const populateTable = (data) => {
                 if (cellIndex === 5 && index === 0) {
                     td.setAttribute('rowspan', rows.length);
                 }
-                
+
                 // Remove border on merged cells
                 if (cellIndex === 5 && index > 0) {
                     td.style.borderTop = 'none';
