@@ -1,6 +1,6 @@
 // Constants
 const MAX_DISTANCE_KM = 1; // Approximately 100 meters
-const SCAN_DELAY = 1000;
+const SCAN_DELAY = 100000;
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA';
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E';
 const RANGE = 'Attendance!A1:I';
@@ -193,27 +193,6 @@ const searchEmpCodeMatch = async empCode => {
     return true;
 };
 
-// Function to handle form submission and update button states
-const updateButtonStates = empCode => {
-    const loginButton = document.getElementById('login');
-    const logoutButton = document.getElementById('logout');
-    
-    // Clear existing button states
-    loginButton.disabled = true;
-    logoutButton.disabled = true;
-
-    console.log("Updating button states with latestLogStatus:", latestLogStatus);
-
-    // Determine button states based on latestLogStatus
-    if (latestLogStatus === 'IN') {
-        logoutButton.disabled = false;
-        console.log("Logout button enabled.");
-    } else if (latestLogStatus === 'INOUT') {
-        loginButton.disabled = false;
-        console.log("Login button enabled.");
-    }
-};
-
 // Function to fetch and process attendance data
 const fetchAttendanceData = async empCode => {
     const data = await fetchDataFromGoogleSheets(RANGE);
@@ -241,6 +220,41 @@ const fetchAttendanceData = async empCode => {
 };
 
 
+// Function to handle form submission and update button states
+const updateButtonStates = (filteredData, latestLogStatus) => {
+    const loginButton = document.getElementById('login');
+    const logoutButton = document.getElementById('logout');
+    
+    // Clear existing button states
+    loginButton.disabled = true;
+    logoutButton.disabled = true;
+
+    // Check if the buttons are correctly selected
+    console.log("Login Button:", loginButton);
+    console.log("Logout Button:", logoutButton);
+
+    if (filteredData.length === 0) {
+        // No logs found, enable the login button
+        loginButton.disabled = false;
+        console.log("Login button enabled due to no logs.");
+    } else {
+        // Existing logs found, handle according to latest log status
+        if (!latestLogStatus || latestLogStatus === ' ') {
+            loginButton.disabled = false;
+            console.log("Login button enabled due to missing or empty log status.");
+        } else if (latestLogStatus === 'IN') {
+            logoutButton.disabled = false;
+            console.log("Logout button enabled.");
+        } else if (latestLogStatus === 'INOUT') {
+            loginButton.disabled = false;
+            console.log("Login button enabled.");
+        }
+    }
+
+    // Log the final state of the buttons for debugging
+    console.log("Final login button state (disabled):", loginButton.disabled);
+    console.log("Final logout button state (disabled):", logoutButton.disabled);
+};
 
 // Function to search employee code and update log status
 const searchEmpCode = async (empCode, callback) => {
@@ -263,6 +277,7 @@ const searchEmpCode = async (empCode, callback) => {
     if (filteredData.length === 0) {
         console.log("No logs found for empCode.");
         document.getElementById("logStatus").value = 'IN'; // Default status if no logs found
+        updateButtonStates(filteredData, 'IN'); // Update button states for no logs
         return;
     }
 
@@ -286,7 +301,7 @@ const searchEmpCode = async (empCode, callback) => {
     console.log("Latest Entry for empCode:", latestLog); // Print the latest entry in the console
 
     // Extract and print the latest log status
-    latestLogStatus = latestLog ? latestLog[8] : 'IN'; // Adjust index as needed
+    let latestLogStatus = latestLog ? latestLog[8] : 'IN'; // Adjust index as needed
     console.log("Latest Log Status for empCode:", latestLogStatus); // Print the latest log status
 
     // Determine the log status based on the latest entry
@@ -299,9 +314,10 @@ const searchEmpCode = async (empCode, callback) => {
         callback(filteredData);
     }
 
-    // Update button states based on latest log status
-    updateButtonStates(empCode);
+    // Update button states based on the latest log status and filtered data
+    updateButtonStates(filteredData, latestLogStatus);
 };
+
 
 
 const populateTable = (data) => {
@@ -420,3 +436,13 @@ const formatHours = (totalMinutes) => {
     const minutes = totalMinutes % 60;
     return `${hours}:${minutes.toString().padStart(2, '0')}`;
 };
+// Service Worker registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, err => {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    });
+}
