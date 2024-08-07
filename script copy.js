@@ -328,25 +328,10 @@ const populateTable = (data) => {
         tableBody.innerHTML = '<tr><td colspan="6">No data available</td></tr>';
         return;
     }
-    const currentMonth = new Date().getMonth(); // Get the current month (0-11)
-    const currentYear = new Date().getFullYear(); // Get the current year
 
     const dateWorkingHoursMap = {};
 
-// Filter data for the current month
-    const filteredData = data.filter(row => {
-        const [inDate, inTime] = (row[4] || '').split(' ');
-        const [day, month, year] = inDate.split('-').map(Number);
-
-        return (month - 1) === currentMonth && year === currentYear;
-    });
-
-    if (filteredData.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6">No data available for the current month</td></tr>';
-        return;
-    }
-
-    filteredData.forEach(row => {
+    data.forEach(row => {
         const [inDate, inTime] = (row[4] || '').split(' ');
         const [outDate, outTime] = (row[5] || '').split(' ');
 
