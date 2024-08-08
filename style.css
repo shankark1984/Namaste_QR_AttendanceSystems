@@ -8,8 +8,8 @@ body {
     height: 100%;
     box-sizing: border-box;
     text-align: center;
-    background: rgb(139, 163, 193);
-    /* background: rgba(15, 36, 62, 1); */
+    /* background: rgb(139, 163, 193); */
+    background: rgba(15, 36, 62, 1);
 }
 
 /* Container styling */
