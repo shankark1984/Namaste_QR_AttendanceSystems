@@ -1,5 +1,5 @@
 // Constants
-const MAX_DISTANCE_KM = 1; // Approximately 100 meters
+const MAX_DISTANCE_KM = 10; // Approximately 100 meters
 const SCAN_DELAY = 100000;
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA';
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E';
@@ -64,6 +64,17 @@ const onScanSuccess = async (decodeText, decodeResult) => {
             document.getElementById("outsiteLatitude").value = siteCoordinates.siteLatitude;
             document.getElementById("outsiteLongitude").value = siteCoordinates.siteLongitude;
             console.log("Site Coordinates - Latitude:", siteCoordinates.siteLatitude, "Longitude:", siteCoordinates.siteLongitude);
+
+            if (!latestLogStatus || latestLogStatus === ' ') {
+                loginButton.disabled = false;
+                logoutButton.disabled = true;
+            } else if (latestLogStatus = "IN") {
+                logoutButton.disabled = false;
+                loginButton.disabled = true;
+            } else if (latestLogStatus = "INOUT") {
+                logoutButton.disabled = true;
+                loginButton.disabled = false;
+            }
         });
     }
     if (splits[0] === "Emp") {
@@ -74,12 +85,11 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         }
         await searchEmpCode(empCode, async (filteredData) => {
             populateTable(filteredData); // Populate table with filtered data
-            updateButtonStates(filteredData, latestLogStatus); // Pass the filteredData and latestLogStatus
         });
 
         document.getElementById("empCode").value = splits[1];
         document.getElementById("empName").value = splits[2];
-
+        console.log(latestLogStatus);
         const empNameDisplayElement = document.getElementById("empNameDisplay");
         if (empNameDisplayElement) {
             empNameDisplayElement.textContent = `Emp Name: ${splits[2]}`;
@@ -87,6 +97,8 @@ const onScanSuccess = async (decodeText, decodeResult) => {
         document.getElementById("indatetime").value = formatDateTime(new Date());
         document.getElementById("outdatetime").value = formatDateTime(new Date());
         console.log("Employee Code:", splits[1], "Employee Name:", splits[2]);
+        loginButton.disabled = true;
+        logoutButton.disabled = true;
     }
 };
 
@@ -216,35 +228,6 @@ const fetchAttendanceData = async empCode => {
     return filteredData;
 };
 
-// Function to update button states based on log data
-const updateButtonStates = (filteredData, latestLogStatus) => {
-    loginButton.disabled = true;
-    logoutButton.disabled = true;
-
-    console.log("Login Button:", loginButton);
-    console.log("Logout Button:", logoutButton);
-
-    if (filteredData.length === 0) {
-        loginButton.disabled = false;
-        console.log("Login button enabled due to no logs.");
-    } else {
-        if (!latestLogStatus || latestLogStatus === ' ') {
-            loginButton.disabled = false;
-            console.log("Login button enabled due to empty or space logStatus.");
-        } else if (latestLogStatus === 'IN') {
-
-            logoutButton.disabled = false;
-            console.log("Logout button enabled.");
-        } else if (latestLogStatus === 'INOUT') {
-          
-            loginButton.disabled = false;
-            console.log("Login button enabled due to last log being OUT.");
-        } else {
-            console.log("Unhandled logStatus:", latestLogStatus);
-        }
-    }
-};
-
 // Function to search employee code and update log status
 const searchEmpCode = async (empCode, callback) => {
     const data = await fetchDataFromGoogleSheets(RANGE);
@@ -266,7 +249,6 @@ const searchEmpCode = async (empCode, callback) => {
     if (filteredData.length === 0) {
         console.log("No logs found for empCode.");
         document.getElementById("logStatus").value = 'IN'; // Default status if no logs found
-        updateButtonStates(filteredData, 'IN'); // Update button states for no logs
         return;
     }
 
@@ -295,19 +277,14 @@ const searchEmpCode = async (empCode, callback) => {
 
     // Determine the log status based on the latest entry
     const logStatus = latestLogStatus === 'IN' ? 'INOUT' : (latestLogStatus === 'INOUT' ? 'IN' : latestLogStatus);
-
+    console.log("find latest Log Status" + latestLogStatus);
     // Update the logStatus input field
     document.getElementById("logStatus").value = logStatus;
 
     if (callback) {
         callback(filteredData);
     }
-
-    // Update button states based on the latest log status and filtered data
-    updateButtonStates(filteredData, latestLogStatus);
 };
-
-
 
 const populateTable = (data) => {
     const tableHeader = document.getElementById('table-header');
@@ -333,7 +310,7 @@ const populateTable = (data) => {
 
     const dateWorkingHoursMap = {};
 
-// Filter data for the current month
+    // Filter data for the current month
     const filteredData = data.filter(row => {
         const [inDate, inTime] = (row[4] || '').split(' ');
         const [day, month, year] = inDate.split('-').map(Number);

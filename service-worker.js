@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-app-cache-v1';
+const CACHE_NAME = 'namaste-v1';
 const urlsToCache = [
     '/',
     '/index.html',
@@ -12,7 +12,13 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
-                return cache.addAll(urlsToCache);
+                return Promise.all(
+                    urlsToCache.map(url => {
+                        return cache.add(url).catch(error => {
+                            console.error(`Failed to cache ${url}:`, error);
+                        });
+                    })
+                );
             })
     );
 });
