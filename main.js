@@ -436,24 +436,36 @@ if ('serviceWorker' in navigator) {
             // Check for updates
             registration.onupdatefound = () => {
                 const installingWorker = registration.installing;
-                installingWorker.onstatechange = () => {
-                    if (installingWorker.state === 'installed') {
-                        if (navigator.serviceWorker.controller) {
-                            // New update available
-                            console.log('New update available');
-                            if (confirm('New update available. Do you want to update now?')) {
-                                window.location.reload();
+                if (installingWorker) {
+                    installingWorker.onstatechange = () => {
+                        if (installingWorker.state === 'installed') {
+                            if (navigator.serviceWorker.controller) {
+                                // New update available
+                                console.log('New update available');
+                                if (confirm('New update available. Do you want to update now?')) {
+                                    installingWorker.postMessage({ action: 'skipWaiting' });
+                                }
+                            } else {
+                                // Content is cached for offline use
+                                console.log('Content is cached for offline use.');
                             }
                         }
-                    }
-                };
+                    };
+                }
             };
         }).catch(error => {
             console.log('ServiceWorker registration failed: ', error);
         });
 
-    // Force the waiting service worker to become the active service worker
+    // Listen for the 'controllerchange' event to reload the page when the new service worker takes control
     navigator.serviceWorker.addEventListener('controllerchange', () => {
         window.location.reload();
     });
 }
+
+// Optionally handle 'skipWaiting' message in service worker
+self.addEventListener('message', event => {
+    if (event.data.action === 'skipWaiting') {
+        self.skipWaiting();
+    }
+});
