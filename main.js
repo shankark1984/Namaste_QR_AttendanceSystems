@@ -65,16 +65,26 @@ const onScanSuccess = async (decodeText, decodeResult) => {
             document.getElementById("outsiteLongitude").value = siteCoordinates.siteLongitude;
             console.log("Site Coordinates - Latitude:", siteCoordinates.siteLatitude, "Longitude:", siteCoordinates.siteLongitude);
 
-            if (!latestLogStatus || latestLogStatus === ' ') {
-                loginButton.disabled = false;
-                logoutButton.disabled = true;
-            } else if (latestLogStatus = "IN") {
-                logoutButton.disabled = false;
-                loginButton.disabled = true;
-            } else if (latestLogStatus = "INOUT") {
-                logoutButton.disabled = true;
-                loginButton.disabled = false;
-            }
+
+            console.log("Latest Log Status:", latestLogStatus); // Debugging
+
+            setTimeout(() => {
+                if (!latestLogStatus || latestLogStatus === ' ') {
+                    console.log("Entering the first condition (login enabled, logout disabled).");
+                    loginButton.disabled = false;
+                    logoutButton.disabled = true;
+                } else if (latestLogStatus === "IN") {
+                    console.log("Entering the second condition (login disabled, logout enabled).");
+                    logoutButton.disabled = false;
+                    loginButton.disabled = true;
+                } else if (latestLogStatus === "INOUT") {
+                    console.log("Entering the third condition (login enabled, logout disabled).");
+                    logoutButton.disabled = true;
+                    loginButton.disabled = false;
+                } else {
+                    console.log("No matching condition found for latestLogStatus.");
+                }
+            }, 5000); // 5 seconds delay
         });
     }
     if (splits[0] === "Emp") {
@@ -89,7 +99,6 @@ const onScanSuccess = async (decodeText, decodeResult) => {
 
         document.getElementById("empCode").value = splits[1];
         document.getElementById("empName").value = splits[2];
-        console.log(latestLogStatus);
         const empNameDisplayElement = document.getElementById("empNameDisplay");
         if (empNameDisplayElement) {
             empNameDisplayElement.textContent = `Emp Name: ${splits[2]}`;
@@ -172,7 +181,7 @@ const fetchDataFromGoogleSheets = async range => {
         }
         return await response.json();
     } catch (error) {
-        console.error(error);
+        console.error("Error" + error);
         return null;
     }
 };
@@ -272,14 +281,15 @@ const searchEmpCode = async (empCode, callback) => {
     console.log("Latest Entry for empCode:", latestLog); // Print the latest entry in the console
 
     // Extract and print the latest log status
-    let latestLogStatus = latestLog ? latestLog[8] : 'IN'; // Adjust index as needed
+    latestLogStatus = latestLog ? latestLog[8] : 'IN'; // Adjust index as needed
     console.log("Latest Log Status for empCode:", latestLogStatus); // Print the latest log status
 
     // Determine the log status based on the latest entry
     const logStatus = latestLogStatus === 'IN' ? 'INOUT' : (latestLogStatus === 'INOUT' ? 'IN' : latestLogStatus);
-    console.log("find latest Log Status" + latestLogStatus);
+    console.log("Find latest Log Status ok: " + latestLogStatus);
     // Update the logStatus input field
     document.getElementById("logStatus").value = logStatus;
+
 
     if (callback) {
         callback(filteredData);

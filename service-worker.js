@@ -3,7 +3,8 @@ const urlsToCache = [
     '/',
     '/index.html',
     '/styles.css',
-    '/script.js',
+    // '/script.js',
+    '/main.js',
     // add other assets here
 ];
 

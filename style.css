@@ -95,9 +95,10 @@ video {
 input,
 label {
     display: none;
+}
+label{
     color: white;
 }
-
 /* Column styling */
 .column {
     float: left;
