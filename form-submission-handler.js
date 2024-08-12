@@ -86,7 +86,9 @@
               if (thankYouMessage) {
                   thankYouMessage.style.display = "block";
               }
-              enableAllButtons(form); // Enable buttons after successful submission
+            //   enableAllButtons(form); 
+              // Enable buttons after successful submission
+              disableAllButtons(form); // disable buttons after successful submission
           } else if (xhr.readyState === 4) {
               enableAllButtons(form); // Enable buttons if there's an error
           }
