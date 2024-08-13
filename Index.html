@@ -10,12 +10,14 @@
     <!-- Add the below meta tags for better compatibility -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+
 </head>
 
 <body onload="currentLocation()">
     <div class="container">
         <div class="section">
             <img class="logo" src="img/Logo.png" alt="Namaste" width="50%">
+            <!-- Display empCode above camera view -->
             <div>
                 <p id="empNameDisplay" class="emp-code-display" style="color: rgba(141, 180, 226, 1);"></p>
                 <p id="siteCodeDisplay" class="emp-code-display" style="color: rgba(141, 180, 226, 1);"></p>
@@ -25,35 +27,87 @@
             <div class="container">
                 <form class="gform pure-form pure-form-stacked" method="POST" data-email="example@email.net"
                     action="https://script.google.com/macros/s/AKfycbwU_J6Z7aR_Sk5AowsTg9JN7FeZmjicubZSm39LpSDC5CyFnVfEQEoFS4KuVC85fWcBTA/exec">
-                    <!-- Form fields here -->
                     <div>
-                        <label for="empCode">Emp Code</label>
-                        <input type="text" id="empCode" name="empCode" placeholder="Emp Code">
+                        <div>
+                            <label for="empCode">Emp Code</label>
+                            <input type="text" id="empCode" name="empCode" placeholder="Emp Code">
+                        </div>
+                        <div>
+                            <label for="empName">Emp Name</label>
+                            <input type="text" id="empName" name="empName" placeholder="Emp Name">
+                        </div>
+                        <div>
+                            <label for="siteID">Site ID</label>
+                            <input type="text" id="siteID" name="siteID" placeholder="Site ID">
+                        </div>
+                        <div>
+                            <label for="workOrderNo">Work Order No</label>
+                            <input type="text" id="workOrderNo" name="workOrderNo" placeholder="Work Order No">
+                        </div>
+                        <div>
+                            <label for="indatetime">In Date & Time</label>
+                            <input type="text" id="indatetime" name="indatetime" placeholder="In Date & Time">
+                        </div>
+                        <div>
+                            <label for="outdatetime">Out Date & Time</label>
+                            <input type="text" id="outdatetime" name="outdatetime" placeholder="Out Date & Time">
+                        </div>
+                        <div>
+                            <label for="incurrentLatitude">In Current Latitude</label>
+                            <input type="text" id="incurrentLatitude" name="incurrentLatitude"
+                                placeholder="In Current Latitude">
+                        </div>
+                        <div>
+                            <label for="incurrentLongitude">In Current Longitude</label>
+                            <input type="text" id="incurrentLongitude" name="incurrentLongitude"
+                                placeholder="In Current Longitude">
+                        </div>
+                        <div>
+                            <label for="outcurrentLatitude">Out Current Latitude</label>
+                            <input type="text" id="outcurrentLatitude" name="outcurrentLatitude"
+                                placeholder="Out Current Latitude">
+                        </div>
+                        <div>
+                            <label for="outcurrentLongitude">Out Current Longitude</label>
+                            <input type="text" id="outcurrentLongitude" name="outcurrentLongitude"
+                                placeholder="Out Current Longitude">
+                        </div>
+                        <div>
+                            <label for="insiteLatitude">In Site Latitude</label>
+                            <input type="text" id="insiteLatitude" name="insiteLatitude" placeholder="In Site Latitude">
+                        </div>
+                        <div>
+                            <label for="insiteLongitude">In Site Longitude</label>
+                            <input type="text" id="insiteLongitude" name="insiteLongitude"
+                                placeholder="In Site Longitude">
+                        </div>
+                        <div>
+                            <label for="outsiteLatitude">Out Site Latitude</label>
+                            <input type="text" id="outsiteLatitude" name="outsiteLatitude"
+                                placeholder="Out Site Latitude">
+                        </div>
+                        <div>
+                            <label for="outsiteLongitude">Out Site Longitude</label>
+                            <input type="text" id="outsiteLongitude" name="outsiteLongitude"
+                                placeholder="Out Site Longitude">
+                        </div>
+                        <div>
+                            <label for="logStatus">Log Status</label>
+                            <input type="text" id="logStatus" name="logStatus" placeholder="Log Status">
+                        </div>
                     </div>
-                    <!-- More fields -->
-                    <div>
-                        <label for="incurrentLatitude">In Current Latitude</label>
-                        <input type="text" id="incurrentLatitude" name="incurrentLatitude" placeholder="In Current Latitude">
-                    </div>
-                    <div>
-                        <label for="incurrentLongitude">In Current Longitude</label>
-                        <input type="text" id="incurrentLongitude" name="incurrentLongitude" placeholder="In Current Longitude">
-                    </div>
-                    <div>
-                        <label for="outcurrentLatitude">Out Current Latitude</label>
-                        <input type="text" id="outcurrentLatitude" name="outcurrentLatitude" placeholder="Out Current Latitude">
-                    </div>
-                    <div>
-                        <label for="outcurrentLongitude">Out Current Longitude</label>
-                        <input type="text" id="outcurrentLongitude" name="outcurrentLongitude" placeholder="Out Current Longitude">
-                    </div>
-                    <!-- Your existing buttons -->
-                    <button type="submit" class="btn btn-light text-primary w-100 py-3" id="login" disabled>LOGIN</button>
-                    <button type="submit" class="btn btn-light text-primary w-100 py-3" id="logout" disabled>LOGOUT</button>
+                    <!-- Your existing buttons in HTML  id="login" disabled-->
+                    <button type="submit" class="btn btn-light text-primary w-100 py-3" id="login"
+                        disabled>LOGIN</button>
+                    <button type="submit" class="btn btn-light text-primary w-100 py-3" id="logout"
+                        disabled>LOGOUT</button>
+
                 </form>
             </div>
             <div id="logStatus"></div>
-            <span class="tagfooter"><i></i><b>AllEdge Soft & Logic (OPC) Pvt. Ltd.</b>, All rights reserved.</span>
+            <span class="tagfooter"><i></i><b>AllEdge Soft & Logic (OPC) Pvt.
+                    Ltd.</b>, All rights reserved.</span>
+
             <p id="demo" class="tagfooter"></p>
         </div>
         <div>
@@ -79,45 +133,44 @@
     <script data-cfasync="false" src="form-submission-handler.js"></script>
 
     <script>
+        const y = document.getElementById("demo");
+
         function currentLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showCurrentPosition, showErrors, {
-                    enableHighAccuracy: true,
-                    timeout: 5000,
-                    maximumAge: 0
-                });
+                navigator.geolocation.getCurrentPosition(showCurrentPosition, showErrors);
             } else {
-                document.getElementById("demo").innerHTML = "Geolocation is not supported by this browser.";
+                y.innerHTML = "Geolocation is not supported by this browser.";
             }
         }
 
         function showCurrentPosition(position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            document.getElementById("demo").innerHTML = `Latitude: ${latitude} - Longitude: ${longitude}`;
-            document.getElementById("incurrentLatitude").value = latitude;
-            document.getElementById("incurrentLongitude").value = longitude;
-            document.getElementById("outcurrentLatitude").value = latitude;
-            document.getElementById("outcurrentLongitude").value = longitude;
+            y.innerHTML = "Latitude: " + position.coords.latitude + " - Longitude: " + position.coords.longitude;
+            document.getElementById("incurrentLatitude").value = position.coords.latitude;
+            document.getElementById("incurrentLongitude").value = position.coords.longitude;
+            document.getElementById("outcurrentLatitude").value = position.coords.latitude;
+            document.getElementById("outcurrentLongitude").value = position.coords.longitude;
         }
 
-        function showErrors(error) {
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    alert("User denied the request for Geolocation. Please enable location services.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert("Location information is unavailable.");
-                    break;
-                case error.TIMEOUT:
-                    alert("The request to get user location timed out.");
-                    break;
-                case error.UNKNOWN_ERROR:
-                    alert("An unknown error occurred.");
-                    break;
+        if (typeof showErrors !== "function") {
+            function showErrors(error) {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        alert("User denied the request for Geolocation. Please enable location services.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert("Location information is unavailable.");
+                        break;
+                    case error.TIMEOUT:
+                        alert("The request to get user location timed out.");
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        alert("An unknown error occurred.");
+                        break;
+                }
             }
         }
     </script>
+
 </body>
 
 </html>

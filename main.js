@@ -204,7 +204,7 @@ const searchEmpCodeMatch = async empCode => {
         document.getElementById("empNameDisplay").textContent = "Scan Employee Code";
         return false;
     }
-
+    console.log(empRow +" " + empCode);
     document.getElementById("empName").value = empRow[1];
     document.getElementById("empNameDisplay").textContent = `Emp Name: ${empRow[1]}`;
 
