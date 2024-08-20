@@ -252,7 +252,7 @@ const searchEmpCode = async (empCode, callback) => {
     console.log("Searching for empCode:", empCode);
 
     // Filter the data by employee code with exact match
-    const filteredData = attendanceData.filter(row => row[2].trim() === empCode); // Adjust column index as needed
+    const filteredData = attendanceData.filter(row => row[2] === empCode); // Adjust column index as needed
     console.log("Filtered Data for empCode:", filteredData); // Debugging statement
 
     if (filteredData.length === 0) {
