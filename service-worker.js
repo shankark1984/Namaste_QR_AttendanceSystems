@@ -4,8 +4,9 @@ const urlsToCache = [
     '/index.html',
     '/styles.css',
     // '/script.js',
-    '/main.js',
-    '/App/js'
+    // '/main.js',
+    // '/App.js'
+    '/App1.js'
     // add other assets here
 ];
 
