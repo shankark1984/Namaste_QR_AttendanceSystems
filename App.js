@@ -1,6 +1,6 @@
 // Constants
-const MAX_DISTANCE_KM = 5; // Approximately 100 meters
-const SCAN_DELAY = 5000;
+const MAX_DISTANCE_KM = 1; // Approximately 100 meters
+const SCAN_DELAY = 500000;
 const API_KEY = 'AIzaSyDKPxKSID_Vq7TVXexqbvlbzjffSKkBsDA';
 const SHEET_ID = '1CzaJwL1YLvKqBVn2l2wLIxAUKO1U0jYMIpo5_RgYC-E';
 const RANGE = 'Attendance!A1:I';
